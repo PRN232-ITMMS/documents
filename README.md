@@ -5,3 +5,5 @@
 ## [2. Database Document](./database_design.md)
 
 ## [3. Backend Document](./backend_architecture.md)
+
+## [4. Migration Guide](./migration_guide.md)
