@@ -575,31 +575,90 @@ Implement basic notification system cho appointments và treatment updates.
 
 ## 🎯 Sprint Goals
 
-- Test results management system
-- Medication và prescription tracking
-- Enhanced treatment monitoring
+- Complete missing entities từ Week 4 (Appointments, TreatmentPhases)
+- Implement core medical tracking (Test Results)
+- Enhanced notification system với email integration
+- Prepare foundation cho advanced features
 
-### Issue #BE013: Test Results Management
+### Issue #BE013: Complete Appointment System Implementation
 
 **Assignee**: BE1  
-**Priority**: High  
-**Story Points**: 8
+**Priority**: CRITICAL  
+**Story Points**: 6
 
 **Description:**
-Implement comprehensive test results management system.
+Complete the missing Appointment entity implementation và full integration với treatment cycles.
 
 **Acceptance Criteria:**
 
-- [ ] Create TestResult entity migration:
+- [ ] Uncomment và complete Appointment DbSet trong ApplicationDbContext:
+  ```csharp
+  public DbSet<Appointment> Appointments { get; set; }
+  ```
+- [ ] Create Appointment entity migration:
+  ```bash
+  dotnet ef migrations add AddAppointments --startup-project API
+  ```
+- [ ] Implement missing repositories:
+  - IAppointmentRepository & AppointmentRepository
+  - Add to UnitOfWork interface và implementation
+- [ ] Complete IAppointmentService implementation:
+  - CreateAppointmentAsync(CreateAppointmentDto) → AppointmentResponseDto
+  - GetAppointmentsByCustomerAsync(int customerId)
+  - GetAppointmentsByDoctorAsync(int doctorId, DateTime date)
+  - GetDoctorAvailabilityAsync(int doctorId, DateTime date)
+- [ ] Create AppointmentsController:
+  ```csharp
+  POST /api/appointments
+  GET /api/appointments (filtered by user role)
+  GET /api/appointments/{id}
+  PUT /api/appointments/{id}/reschedule
+  PUT /api/appointments/{id}/cancel
+  ```
+- [ ] Implement appointment-cycle integration
+- [ ] Add conflict detection cho appointment scheduling
+
+**Definition of Done:**
+
+- Appointment entity fully implemented và working
+- Full CRUD operations functional
+- Integration với treatment cycles complete
+- Conflict detection prevents double booking
+- All missing repositories added to UnitOfWork
+
+---
+
+### Issue #BE014: Treatment Phases & Test Results Management
+
+**Assignee**: BE2  
+**Priority**: HIGH  
+**Story Points**: 7
+
+**Description:**
+Implement TreatmentPhase entity và core Test Results management system.
+
+**Acceptance Criteria:**
+
+- [ ] Uncomment và implement TreatmentPhase DbSet:
+  ```csharp
+  public DbSet<TreatmentPhase> TreatmentPhases { get; set; }
+  ```
+- [ ] Create TreatmentPhase migration:
+  ```bash
+  dotnet ef migrations add AddTreatmentPhases --startup-project API
+  ```
+- [ ] Implement TestResult entity và migration:
   ```bash
   dotnet ef migrations add AddTestResults --startup-project API
   ```
+- [ ] Create missing repositories:
+  - ITreatmentPhaseRepository & TreatmentPhaseRepository
+  - ITestResultRepository & TestResultRepository
 - [ ] Create ITestResultService:
   - CreateTestResultAsync(CreateTestResultDto) → TestResultDto
   - GetTestResultsByCycleAsync(int cycleId) → List<TestResultDto>
   - GetTestResultByIdAsync(int testResultId) → TestResultDetailDto
   - UpdateTestResultAsync(int testResultId, UpdateTestResultDto)
-  - GetTestResultsByTypeAsync(int cycleId, TestType type)
 - [ ] Create TestResultsController:
   ```csharp
   POST /api/test-results (Doctor only)
@@ -608,45 +667,191 @@ Implement comprehensive test results management system.
   PUT /api/test-results/{id} (Doctor only)
   GET /api/treatment-cycles/{id}/test-results
   ```
-- [ ] Support different test types:
+- [ ] Support basic test types:
   - BloodTest, Ultrasound, HormoneLevel, PregnancyTest
-- [ ] Implement result interpretation logic:
-  - Normal/Abnormal/RequiresAttention based on reference ranges
-- [ ] Add doctor notes system
+- [ ] Implement result interpretation với reference ranges:
+  - Normal/Abnormal/RequiresAttention based on reference values
+  - Automatic flagging of critical results
+- [ ] Add TestResult-Appointment relationship:
+  - Link test results to specific appointments
+  - Track which appointment generated the test
+- [ ] Implement validation logic:
+  - Reference range validation
+  - Test date validation (not future dates)
+  - Required fields validation
 
 **Definition of Done:**
 
-- Test results can be recorded với proper structure
-- Different test types supported
-- Result interpretation working
-- Doctor notes system functional
+- TreatmentPhase entity implemented
+- Test results can be recorded và linked to cycles và appointments
+- Basic test types supported với reference ranges
+- Result interpretation working với proper validation
+- Phase-cycle relationship functional
+- Critical results flagged automatically
 
 ---
 
-### Issue #BE014: Medication & Prescription System
+### Issue #BE015: Enhanced Email & Notification Integration
 
-**Assignee**: BE2  
-**Priority**: High  
-**Story Points**: 9
+**Assignee**: BE1  
+**Priority**: MEDIUM  
+**Story Points**: 5
 
 **Description:**
-Implement medication management và prescription tracking system.
+Complete notification system với email integration và automatic triggers.
 
 **Acceptance Criteria:**
 
-- [ ] Create Medication và Prescription entities migration:
+- [ ] Complete IEmailService implementation:
+  - SendEmailAsync(EmailDto emailDto)
+  - SendTemplateEmailAsync(string template, object data, string toEmail)
+- [ ] Create essential email templates:
+  - Appointment confirmation
+  - Appointment reminder (24h before)
+  - Test results available notification
+  - Critical test result alert
+- [ ] Implement automatic notification triggers:
+  - When appointment is created/confirmed
+  - When test results are added
+  - When treatment cycle status changes
+  - When critical test results are flagged
+- [ ] Add EmailService registration trong DI container
+- [ ] Create email configuration:
+  - SMTP settings trong appsettings
+  - Email template structure
+- [ ] Update NotificationService với email integration:
+  - Auto-send emails for critical notifications
+  - Link notifications với related entities
+  - Email delivery status tracking
+- [ ] Add basic email queue mechanism:
+  - Simple in-memory queue for email sending
+  - Background service for processing emails
+  - Error handling và retry logic
+- [ ] Implement email preferences:
+  - User can enable/disable email notifications
+  - Different notification types configuration
+
+**Definition of Done:**
+
+- Email service functional với SMTP
+- Essential email templates working
+- Automatic notifications triggered by system events
+- Email-notification integration complete
+- Basic email queue working
+- Email configuration ready for production
+- User email preferences functional
+
+---
+
+### Issue #BE016: System Integration & Foundation Completion
+
+**Assignee**: BE2  
+**Priority**: MEDIUM  
+**Story Points**: 4
+
+**Description:**
+Complete system integration và prepare foundation cho Week 6 advanced features.
+
+**Acceptance Criteria:**
+
+- [ ] Create Medication và Prescription entities (prepare for implementation):
+  ```csharp
+  // Có thể comment DbSet tạm thời
+  public DbSet<Medication> Medications { get; set; }
+  public DbSet<Prescription> Prescriptions { get; set; }
+  ```
+- [ ] Create entity configurations cho Medication & Prescription
+- [ ] Complete UnitOfWork interface với ALL missing repositories:
+  ```csharp
+  IAppointmentRepository Appointments { get; }
+  ITreatmentPhaseRepository TreatmentPhases { get; }
+  ITestResultRepository TestResults { get; }
+  INotificationRepository Notifications { get; }
+  // Prepare for Week 6:
+  // IMedicationRepository Medications { get; }
+  // IPrescriptionRepository Prescriptions { get; }
+  ```
+- [ ] Complete service registrations trong DI container:
+  - All missing services added to ServiceCollectionExtensions
+  - Proper lifetime management (Scoped/Singleton)
+  - Interface-implementation mapping complete
+- [ ] Add critical database indexes cho performance:
+  - Appointment.DoctorId, Appointment.ScheduledDateTime
+  - TestResult.CycleId, TestResult.TestDate, TestResult.TestType
+  - TreatmentPhase.CycleId, TreatmentPhase.PhaseOrder
+  - Notification.UserId, Notification.IsRead
+  - TreatmentCycle.Status, TreatmentCycle.StartDate
+- [ ] Complete missing entity integrations:
+  - TreatmentCycle ↔ TreatmentPhase proper relationship
+  - Appointment ↔ TestResult linking
+  - Notification auto-creation for major events
+- [ ] Add comprehensive validation:
+  - Cross-entity validation rules
+  - Business rule enforcement
+  - Data consistency checks
+- [ ] Create missing DTOs:
+  - Summary DTOs cho dashboard integration
+  - Detail DTOs với full navigation properties
+  - Filter DTOs cho advanced querying
+
+**Definition of Done:**
+
+- ALL missing repositories added to UnitOfWork
+- Critical database indexes created
+- ALL services properly registered
+- Entity relationships và integrations complete
+- Foundation fully ready cho Week 6 implementation
+- Comprehensive validation in place
+- System integration tests passing
+
+---
+
+# Week 6: Medication Management & Advanced Features
+
+## 🎯 Sprint Goals
+
+- Complete medication và prescription system
+- Implement review và rating system
+- Advanced analytics foundation
+- System integration và optimization
+
+### Issue #BE017: Complete Medication & Prescription System
+
+**Assignee**: BE2  
+**Priority**: HIGH  
+**Story Points**: 8
+
+**Description:**
+Implement full medication management và prescription tracking system.
+
+**Acceptance Criteria:**
+
+- [ ] Uncomment và implement Medication/Prescription DbSets:
+  ```csharp
+  public DbSet<Medication> Medications { get; set; }
+  public DbSet<Prescription> Prescriptions { get; set; }
+  ```
+- [ ] Create migration cho medication entities:
   ```bash
   dotnet ef migrations add AddMedicationsAndPrescriptions --startup-project API
   ```
+- [ ] Implement missing repositories:
+  - IMedicationRepository & MedicationRepository
+  - IPrescriptionRepository & PrescriptionRepository
+  - Add to UnitOfWork
 - [ ] Create IMedicationService:
   - GetAllMedicationsAsync() → List<MedicationDto>
+  - GetMedicationByIdAsync(int id) → MedicationDetailDto
   - CreateMedicationAsync(CreateMedicationDto) - admin only
   - UpdateMedicationAsync(int medicationId, UpdateMedicationDto)
+  - SearchMedicationsAsync(string searchTerm) → List<MedicationDto>
 - [ ] Create IPrescriptionService:
   - CreatePrescriptionAsync(CreatePrescriptionDto) - doctor only
   - GetPrescriptionsByPatientAsync(int customerId) → List<PrescriptionDto>
+  - GetPrescriptionsByDoctorAsync(int doctorId) → List<PrescriptionDto>
   - UpdatePrescriptionAsync(int prescriptionId, UpdatePrescriptionDto)
   - DiscontinuePrescriptionAsync(int prescriptionId)
+  - GetActivePrescriptionsAsync(int customerId) → List<PrescriptionDto>
 - [ ] Create controllers:
 
   ```csharp
@@ -661,74 +866,42 @@ Implement medication management và prescription tracking system.
   - GET /api/customers/{id}/prescriptions
   ```
 
+- [ ] Implement prescription-phase integration:
+  - Link prescriptions to treatment phases
+  - Automatic prescription suggestions based on phase
+- [ ] Add comprehensive safety validations:
+  - Dosage validation
+  - Drug interaction basic checking (simplified)
+  - Allergy checking với patient medical history
+  - Prescription date validations
 - [ ] Implement prescription status tracking:
-  - Active/Completed/Discontinued
-- [ ] Add basic drug interaction checking
+  - Active/Completed/Discontinued/Expired
+  - Automatic status updates
+- [ ] Add prescription notifications:
+  - New prescription notification
+  - Medication reminder notifications
+  - Prescription expiry warnings
 
 **Definition of Done:**
 
-- Medications can be managed in system
-- Prescriptions can be created by doctors
-- Prescription tracking working correctly
-- Basic safety checks implemented
+- Medication CRUD fully functional với search
+- Prescription system integrated với treatment phases
+- Doctor can prescribe medications với safety checks
+- Patient can view prescription history và active medications
+- Comprehensive safety validations implemented
+- Prescription status tracking working
+- Automatic notifications for prescriptions
 
 ---
 
-### Issue #BE015: Enhanced Email Notification System
+### Issue #BE018: Review & Rating System
 
 **Assignee**: BE1  
-**Priority**: Medium  
+**Priority**: MEDIUM  
 **Story Points**: 6
 
 **Description:**
-Implement comprehensive email notification system.
-
-**Acceptance Criteria:**
-
-- [ ] Create IEmailService implementation:
-  - SendEmailAsync(EmailDto emailDto)
-  - SendTemplateEmailAsync(string template, object data, string toEmail)
-- [ ] Create email templates:
-  - Appointment confirmation
-  - Appointment reminder
-  - Treatment phase update
-  - Test results available
-- [ ] Add EmailService registration trong DI container
-- [ ] Implement email queue system (basic):
-  - Background service cho email sending
-  - Retry mechanism cho failed emails
-- [ ] Add email tracking:
-  - EmailLog entity cho tracking sent emails
-  - Delivery status tracking
-- [ ] Create email configuration:
-  - SMTP settings trong appsettings
-  - Email template configuration
-
-**Definition of Done:**
-
-- Email notifications sent automatically
-- Email templates working correctly
-- Background email processing implemented
-- Email delivery tracking functional
-
----
-
-# Week 6: Reviews, Blog & Advanced Features
-
-## 🎯 Sprint Goals
-
-- Review và rating system
-- Blog management system
-- Advanced communication features
-
-### Issue #BE016: Review & Rating System
-
-**Assignee**: BE2  
-**Priority**: High  
-**Story Points**: 7
-
-**Description:**
-Implement comprehensive review và rating system.
+Implement review và rating system cho doctors và services.
 
 **Acceptance Criteria:**
 
@@ -739,119 +912,118 @@ Implement comprehensive review và rating system.
 - [ ] Create IReviewService:
   - CreateReviewAsync(CreateReviewDto) → ReviewDto
   - GetReviewsByDoctorAsync(int doctorId) → List<ReviewDto>
-  - ApproveReviewAsync(int reviewId) - admin only
   - GetReviewStatisticsAsync(int doctorId) → ReviewStatisticsDto
+  - ApproveReviewAsync(int reviewId) - admin only
 - [ ] Create ReviewsController:
   ```csharp
-  POST /api/reviews (Customer only)
+  POST /api/reviews (Customer only - after completed cycle)
   GET /api/reviews (với filtering)
   PUT /api/reviews/{id}/approve (Admin only)
   GET /api/doctors/{id}/reviews
+  GET /api/doctors/{id}/statistics
   ```
 - [ ] Implement rating aggregation:
   - Average rating calculation
+  - Update doctor success rate
   - Rating distribution analysis
-  - Update doctor success rate based on reviews
-- [ ] Add review moderation system:
+- [ ] Add review validation:
+  - Only customers with completed cycles can review
+  - One review per cycle
+- [ ] Basic moderation system:
   - Auto-approval for trusted customers
-  - Manual review for new customers
+  - Admin moderation queue
 
 **Definition of Done:**
 
-- Reviews can be submitted và managed
-- Rating aggregation working correctly
-- Moderation workflow operational
-- Doctor ratings updated automatically
+- Customers can submit reviews after treatment
+- Doctor ratings calculated automatically
+- Admin can moderate reviews
+- Review statistics displayed correctly
 
 ---
 
-### Issue #BE017: Blog Management System
-
-**Assignee**: BE1  
-**Priority**: Medium  
-**Story Points**: 6
-
-**Description:**
-Create blog và content management system cho educational content.
-
-**Acceptance Criteria:**
-
-- [ ] Create BlogPost entity migration:
-  ```bash
-  dotnet ef migrations add AddBlogPosts --startup-project API
-  ```
-- [ ] Create IBlogService:
-  - CreateBlogPostAsync(CreateBlogPostDto) → BlogPostDto
-  - GetPublishedPostsAsync(BlogFilterDto) → PaginatedResultDto<BlogPostDto>
-  - GetBlogPostByIdAsync(int blogPostId) → BlogPostDetailDto
-  - PublishBlogPostAsync(int blogPostId)
-  - SearchBlogPostsAsync(string searchTerm) → List<BlogPostDto>
-- [ ] Create BlogPostsController:
-  ```csharp
-  GET /api/blog-posts (published posts với pagination)
-  GET /api/blog-posts/{id}
-  POST /api/blog-posts (Author/Admin only)
-  PUT /api/blog-posts/{id}/publish
-  GET /api/blog-posts/search
-  ```
-- [ ] Implement blog features:
-  - Category management
-  - Tag system
-  - Full-text search
-  - View tracking
-- [ ] Add content workflow:
-  - Draft → Review → Published
-
-**Definition of Done:**
-
-- Blog posts can be created và managed
-- Publishing workflow operational
-- Search functionality working
-- Category và tag system functional
-
----
-
-### Issue #BE018: Advanced Analytics Foundation
+### Issue #BE019: Analytics & Dashboard Foundation
 
 **Assignee**: BE2  
-**Priority**: Medium  
+**Priority**: MEDIUM  
 **Story Points**: 5
 
 **Description:**
-Create foundation cho advanced analytics và reporting.
+Create analytics foundation và basic dashboard APIs.
 
 **Acceptance Criteria:**
 
 - [ ] Create IAnalyticsService:
-  - GetSuccessRatesByTreatmentTypeAsync() → TreatmentAnalyticsDto
+  - GetTreatmentSuccessRatesAsync() → TreatmentAnalyticsDto
   - GetDoctorPerformanceAsync(int doctorId) → DoctorPerformanceDto
   - GetPatientSatisfactionAsync() → SatisfactionMetricsDto
-  - GetRevenueAnalyticsAsync(DateTime from, DateTime to) → RevenueAnalyticsDto
+  - GetSystemOverviewAsync() → SystemOverviewDto
 - [ ] Create AnalyticsController:
   ```csharp
   GET /api/analytics/success-rates
   GET /api/analytics/doctor-performance/{id}
   GET /api/analytics/patient-satisfaction
-  GET /api/analytics/revenue
+  GET /api/analytics/overview
   ```
-- [ ] Implement calculation algorithms:
-  - Success rate calculations by treatment type
-  - Doctor performance metrics
-  - Patient satisfaction scoring
-  - Revenue tracking và forecasting
+- [ ] Implement basic dashboard data:
+  - Customer dashboard: current cycle, appointments, test results
+  - Doctor dashboard: today's appointments, patient count
+  - Manager dashboard: system statistics, success rates
+- [ ] Create IDashboardService với basic implementations
 - [ ] Add caching cho analytics data:
-  - Cache frequently requested analytics
-  - Background calculation cho heavy reports
-- [ ] Create analytics DTOs:
-  - TreatmentAnalyticsDto, DoctorPerformanceDto
-  - SatisfactionMetricsDto, RevenueAnalyticsDto
+  - Cache success rate calculations
+  - Refresh cache when data changes
 
 **Definition of Done:**
 
-- Analytics APIs returning accurate data
-- Success rates calculated correctly
-- Performance metrics meaningful
-- Caching improving response times
+- Basic analytics APIs functional
+- Dashboard data accurate
+- Caching improving performance
+- Role-based data access working
+
+---
+
+### Issue #BE020: System Integration & Optimization
+
+**Assignee**: BE1  
+**Priority**: MEDIUM  
+**Story Points**: 4
+
+**Description:**
+Complete system integration và basic optimizations.
+
+**Acceptance Criteria:**
+
+- [ ] Complete all missing service integrations:
+  - TreatmentCycle ↔ Appointments
+  - Appointments ↔ TestResults
+  - TreatmentPhases ↔ Prescriptions
+  - Notifications ↔ All major events
+- [ ] Implement comprehensive event system:
+  - Appointment created → send notification
+  - Test result added → notify patient
+  - Prescription added → notify patient
+  - Cycle completed → enable reviews
+- [ ] Add validation improvements:
+  - Cross-entity validation
+  - Business rule enforcement
+  - Data consistency checks
+- [ ] Basic performance optimizations:
+  - Add database indexes cho frequently queried fields
+  - Optimize includes trong repositories
+  - Add pagination cho large datasets
+- [ ] Create comprehensive DTOs:
+  - Dashboard DTOs với aggregated data
+  - Detail DTOs với full relationships
+  - Summary DTOs cho lists
+
+**Definition of Done:**
+
+- All major entities properly integrated
+- Automatic notifications working
+- Performance optimized cho common operations
+- Data validation comprehensive
+- Business rules enforced
 
 ---
 
