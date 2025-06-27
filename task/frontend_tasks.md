@@ -59,9 +59,9 @@
 
 ---
 
-# 🔄 IN PROGRESS (Week 2)
+# ✅ COMPLETED TASKS (Week 2)
 
-### Issue #FE004: Customer Dashboard 🔄 IN PROGRESS
+### Issue #FE004: Customer Dashboard ✅ COMPLETED
 
 **Assignee**: FE1 | **Priority**: High | **Story Points**: 8 | **Status**: 🔄 50% DONE
 
@@ -103,9 +103,7 @@
 
 ---
 
-# 📋 READY TO START (Week 2)
-
-### Issue #FE005: Doctor Listing Page 📋 READY
+### Issue #FE005: Doctor Listing Page
 
 **Assignee**: AVAILABLE | **Priority**: Medium | **Story Points**: 7 | **Status**: 📋 READY TO START
 
@@ -122,536 +120,642 @@
 
 ---
 
-# 📅 UPCOMING WEEKS (Week 3-7)
+# 📅 KẾ HOẠCH TUẦN 3 - FRONTEND DEVELOPMENT
 
-## Week 3: Treatment Cycles & Appointments
+**Infertility Treatment Management System**
 
-### Issue #FE007: Treatment Cycle Interface
-
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 10 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE006 (API Integration)
-
-**Tasks:**
-
-- [ ] Create cycle overview dashboard
-- [ ] Build cycle creation wizard
-- [ ] Add treatment package selection
-- [ ] Create cycle timeline component
-- [ ] Build cycle history page
-- [ ] Add progress tracking
-
-**Target**: Cycles can be created, progress visible, history accessible
+**Ngày**: 27/06/2025 - 03/07/2025  
+**Sprint Goal**: Complete API Integration & Core Treatment Management UI  
+**Total Story Points**: 28 points
 
 ---
 
-### Issue #FE008: Appointment Scheduling
+## 🎯 **SPRINT OBJECTIVES**
 
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 8 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE005 (Doctor Listing), FE006 (API Integration)
-
-**Tasks:**
-
-- [ ] Create calendar component with available slots
-- [ ] Build appointment booking form
-- [ ] Add appointment list/history
-- [ ] Implement reschedule functionality
-- [ ] Create appointment details view
-- [ ] Add cancellation feature
-
-**Target**: Appointments bookable, calendar user-friendly, management working
+1. **Complete API Integration** - Kết nối Frontend với Backend APIs
+2. **Treatment Cycle Management UI** - Xây dựng giao diện quản lý chu kỳ điều trị
+3. **Appointment Booking System** - Hoàn thiện hệ thống đặt lịch hẹn
+4. **Test Results Display** - Giao diện hiển thị kết quả xét nghiệm
+5. **Enhanced Dashboard Features** - Cải thiện dashboard với real data
 
 ---
 
-### Issue #FE009: Basic Notifications
+## 📋 **DETAILED ISSUES**
 
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 6 | **Status**: 📅 PLANNED
+### **Issue #FE007: Complete API Integration Setup**
 
-**Tasks:**
+**Assignee**: FE1  
+**Priority**: CRITICAL  
+**Story Points**: 8  
+**Status**: 🚨 MUST START FIRST
 
-- [ ] Create notification center
-- [ ] Add notification badges
-- [ ] Build notification settings
-- [ ] Implement real-time updates
-- [ ] Create notification history
+**Description:**
+Hoàn thiện việc tích hợp API với Backend, setup interceptors và error handling toàn diện.
 
-**Target**: Notifications working, settings functional, real-time updates active
+**Acceptance Criteria:**
 
----
+**🔧 API Client Setup:**
 
-## Week 4: Test Results & Progress Tracking
+- [ ] Configure Axios interceptors cho token management
+  ```typescript
+  // Request interceptor - auto add JWT token
+  // Response interceptor - handle 401/403/500 errors
+  // Token refresh logic when access token expires
+  ```
+- [ ] Create comprehensive API service classes:
+  ```typescript
+  // apis/treatment.api.ts - CRUD operations
+  // apis/appointment.api.ts - booking/scheduling
+  // apis/medical.api.ts - test results, prescriptions
+  // apis/profile.api.ts - customer profile management
+  ```
+- [ ] Define complete TypeScript types:
+  ```typescript
+  // types/treatment.type.ts
+  // types/appointment.type.ts
+  // types/medical.type.ts
+  // Update existing types with complete API response formats
+  ```
 
-### Issue #FE010: Test Results Interface
+**🔄 Error Handling:**
 
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 8 | **Status**: 📅 PLANNED
+- [ ] Global error boundary component
+- [ ] API error mapping to user-friendly messages
+- [ ] Network error detection và retry logic
+- [ ] Loading states management với TanStack Query
 
-**Dependencies**: Complete FE006 (API Integration)
+**🔗 Real API Connection:**
 
-**Tasks:**
+- [ ] Replace all mock data với real API calls
+- [ ] Test all endpoints với Postman/API testing
+- [ ] Handle pagination properly cho all list endpoints
+- [ ] Implement query invalidation strategies
 
-- [ ] Create test results dashboard
-- [ ] Build result cards with charts
-- [ ] Add result timeline view
-- [ ] Create result details modal
-- [ ] Implement filtering and search
-- [ ] Add export functionality
+**📊 State Management:**
 
-**Target**: Results displayed clearly, charts helpful, history navigable
+- [ ] Enhanced auth store với token refresh
+- [ ] Create treatment store cho cycle management
+- [ ] Create appointment store cho booking state
+- [ ] Sync stores với API responses
 
----
+**Definition of Done:**
 
-### Issue #FE011: Progress Tracking
-
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 7 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE007 (Treatment Cycles)
-
-**Tasks:**
-
-- [ ] Create progress dashboard
-- [ ] Build milestone tracker
-- [ ] Add progress charts
-- [ ] Create notes journal
-- [ ] Implement goal setting
-- [ ] Add progress sharing
-
-**Target**: Progress clearly visualized, tracking motivational, goals manageable
-
----
-
-### Issue #FE012: Data Visualization
-
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 6 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE010 (Test Results)
-
-**Tasks:**
-
-- [ ] Add simple chart components (Chart.js or Recharts)
-- [ ] Create trend analysis views
-- [ ] Build comparison charts
-- [ ] Implement interactive timelines
-- [ ] Add data export options
-
-**Target**: Charts intuitive, trends clear, comparisons helpful
+- ✅ All API endpoints connected và working
+- ✅ Token refresh working seamlessly
+- ✅ Error handling comprehensive
+- ✅ No more mock data used
+- ✅ Loading states implemented everywhere
+- ✅ Types match actual API responses
 
 ---
 
-## Week 5-7: Advanced Features & Polish
+### **Issue #FE008: Treatment Cycle Management UI**
 
-### Issue #FE013: Medication Management
+**Assignee**: FE2  
+**Priority**: HIGH  
+**Story Points**: 10  
+**Status**: 📋 READY TO START
 
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 8 | **Status**: 📅 PLANNED
+**Description:**
+Xây dựng giao diện quản lý chu kỳ điều trị hoàn chỉnh từ tạo mới đến theo dõi tiến độ.
 
-**Dependencies**: Complete FE007 (Treatment Cycles)
+**Acceptance Criteria:**
 
-### Issue #FE014: Advanced Calendar
+**📋 Treatment Cycle Creation:**
 
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 7 | **Status**: 📅 PLANNED
+- [ ] Create Treatment Cycle wizard/form:
+  ```typescript
+  // pages/CreateTreatmentCycle.tsx
+  // Multi-step form: Package Selection → Doctor Selection → Confirmation
+  // Integration với treatment package API và doctor API
+  ```
+- [ ] Package selection interface:
+  ```typescript
+  // components/treatment/PackageSelector.tsx
+  // Display IUI/IVF packages với pricing
+  // Comparison table between packages
+  // Package details modal
+  ```
+- [ ] Doctor assignment interface:
+  ```typescript
+  // components/treatment/DoctorAssignment.tsx
+  // Filter doctors by specialization
+  // Show doctor availability
+  // Doctor profile preview
+  ```
 
-**Dependencies**: Complete FE008 (Appointment Scheduling)
+**📊 Cycle Tracking Dashboard:**
 
-### Issue #FE015: UX Improvements
+- [ ] Cycle overview page:
+  ```typescript
+  // pages/TreatmentCycle.tsx
+  // Current cycle status và progress indicator
+  // Phase timeline visualization
+  // Key metrics và next steps
+  ```
+- [ ] Phase management interface:
+  ```typescript
+  // components/treatment/PhaseTracker.tsx
+  // Phase progress bar với milestones
+  // Current phase details và instructions
+  // Upcoming phase preparation
+  ```
+- [ ] Cost tracking component:
+  ```typescript
+  // components/treatment/CostTracker.tsx
+  // Total cost breakdown
+  // Phase-by-phase cost analysis
+  // Payment status tracking
+  ```
 
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 6 | **Status**: 📅 PLANNED
+**📈 Progress Visualization:**
 
-### Issue #FE016: Review System
+- [ ] Treatment timeline component:
+  ```typescript
+  // components/treatment/TreatmentTimeline.tsx
+  // Visual timeline của all phases
+  // Completed/current/upcoming phases
+  // Key dates và milestones
+  ```
+- [ ] Cycle statistics dashboard:
+  ```typescript
+  // components/treatment/CycleStats.tsx
+  // Success probability tracking
+  // Historical cycle comparison
+  // Key performance indicators
+  ```
 
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 6 | **Status**: 📅 PLANNED
+**🔄 Cycle Management Actions:**
 
-**Dependencies**: Complete FE005 (Doctor Listing)
+- [ ] Update cycle status functionality
+- [ ] Add new phase interface
+- [ ] Cycle notes và comments system
+- [ ] Export cycle summary report
 
-### Issue #FE017: Blog Interface
+**Definition of Done:**
 
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 7 | **Status**: 📅 PLANNED
-
-### Issue #FE018: Basic Messaging
-
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 5 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE005 (Doctor Listing)
-
-### Issue #FE019: Complete Dashboard
-
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 8 | **Status**: 📅 PLANNED
-
-**Dependencies**: Complete FE004, FE007, FE010, FE011
-
-### Issue #FE020: Testing & Optimization
-
-**Assignee**: PENDING | **Priority**: High | **Story Points**: 6 | **Status**: 📅 PLANNED
-
-### Issue #FE021: Final Polish
-
-**Assignee**: PENDING | **Priority**: Medium | **Story Points**: 5 | **Status**: 📅 PLANNED
-
----
-
-# 🎯 IMMEDIATE ACTION ITEMS (Next 1-2 Weeks)
-
-## 🔥 CRITICAL PRIORITY
-
-### ⚠️ EXECUTION ORDER (MANDATORY):
-
-1. **Complete FE006 FIRST**: API Integration Setup (BLOCKER)
-   - ⚡ **PRIORITY #1** - Blocks all downstream features
-   - Set up interceptors and error handling
-   - Create all necessary API service classes
-   - Define complete TypeScript types
-   - **Timeline**: 3 days MAX
-
-2. **Complete FE004**: Finish Customer Dashboard
-   - Focus on medical history and emergency contact forms
-   - Add comprehensive form validation
-   - **Timeline**: 2-3 days
-
-3. **Start FE005**: Doctor Listing Page
-   - Can be assigned to new developer
-   - Relatively independent from other tasks
-   - **Timeline**: 5-7 days
-
-## 📊 RECOMMENDED ASSIGNMENT STRATEGY
-
-### For Current Developer (FE1):
-
-- **Priority 1**: Complete FE006 (API Integration) - 3 days MAX ⚡
-- **Priority 2**: Complete FE004 (Customer Dashboard) - 2-3 days
-- **Note**: FE006 MUST be completed first as it blocks everything else
-
-### For New Developer (FE2):
-
-- **Priority 1**: Take FE005 (Doctor Listing Page) - 5-7 days
-- **Future**: Take FE009 (Basic Notifications) when ready
-
-### Dependencies to Watch:
-
-- Most Week 3+ tasks depend on FE006 (API Integration) being complete
-- FE008 (Appointments) needs both FE005 (Doctors) and FE006 (API)
-- FE007 (Treatment Cycles) is a major blocker for many later features
-
----
-
-# 📈 PROGRESS TRACKING
-
-## Completed (35 Story Points / 100 Total)
-
-- ✅ FE001: React Setup (5 points)
-- ✅ FE002: Authentication (8 points)
-- ✅ FE003: Base Layout (6 points)
-- 🔄 FE004: Customer Dashboard (4/8 points)
-- 🔄 FE006: API Integration (2.5/6 points)
-
-## Next Sprint Goals (Week 2-3)
-
-- 🎯 Complete FE004, FE006 (11.5 points remaining)
-- 🎯 Complete FE005 (7 points)
-- 🎯 Start FE007 or FE008 (begin Week 3)
-
-**Target**: 60% completion by end of Week 3
+- ✅ Users can create new treatment cycles
+- ✅ Cycle progress visualized clearly
+- ✅ Phase management functional
+- ✅ Cost tracking accurate
+- ✅ Timeline displays correctly
+- ✅ All CRUD operations working
 
 ---
 
-## 📋 DETAILED TASK BREAKDOWN FOR CURRENT WEEK
+### **Issue #FE009: Appointment Booking System**
 
-### 🔥 FE004: Customer Dashboard - REMAINING TASKS
+**Assignee**: FE1  
+**Priority**: HIGH  
+**Story Points**: 8  
+**Status**: 📋 READY TO START
 
-**Medical History Management:**
+**Description:**
+Xây dựng hệ thống đặt lịch hẹn hoàn chỉnh với calendar interface và conflict detection.
 
-- [ ] Create medical history form component
-- [ ] Add fields: previous treatments, surgeries, medications
-- [ ] Implement date picker for treatment dates
-- [ ] Add file upload for medical documents
-- [ ] Create medical history timeline view
+**Acceptance Criteria:**
 
-**Emergency Contact Form:**
+**📅 Calendar Interface:**
 
-- [ ] Create emergency contact form
-- [ ] Add multiple contact support
-- [ ] Implement relationship dropdown
-- [ ] Add contact validation (phone, email)
+- [ ] Appointment booking calendar:
+  ```typescript
+  // components/appointments/BookingCalendar.tsx
+  // Monthly/weekly calendar view
+  // Available time slots highlighting
+  // Doctor availability integration
+  // Time zone handling
+  ```
+- [ ] Time slot selection:
+  ```typescript
+  // components/appointments/TimeSlotPicker.tsx
+  // Available slots for selected date
+  // Appointment duration display
+  // Conflict detection và prevention
+  ```
 
-**Form Enhancements:**
+**🏥 Appointment Management:**
 
-- [ ] Add auto-save functionality
-- [ ] Implement form validation with Yup
-- [ ] Add loading states for all forms
-- [ ] Connect forms to TanStack Query mutations
+- [ ] Appointment form:
+  ```typescript
+  // components/appointments/AppointmentForm.tsx
+  // Appointment type selection (Consultation, Test, Procedure)
+  // Notes và special requirements
+  // Integration với treatment cycle
+  ```
+- [ ] Appointment list view:
+  ```typescript
+  // pages/Appointments.tsx
+  // Upcoming/past appointments
+  // Filter by type/status/doctor
+  // Pagination với search
+  ```
+- [ ] Appointment details modal:
+  ```typescript
+  // components/appointments/AppointmentDetails.tsx
+  // Full appointment information
+  // Related test results
+  // Reschedule/cancel options
+  ```
 
----
+**🔄 Booking Actions:**
 
-### 🔥 FE006: API Integration Setup - REMAINING TASKS
+- [ ] Reschedule appointment interface:
+  ```typescript
+  // components/appointments/RescheduleModal.tsx
+  // New date/time selection
+  // Conflict checking
+  // Confirmation workflow
+  ```
+- [ ] Cancel appointment functionality:
+  ```typescript
+  // Cancellation reason selection
+  // Confirmation dialog
+  // Automatic notifications
+  ```
 
-**Axios Configuration:**
+**👨‍⚕️ Doctor Integration:**
 
-- [ ] Set up request/response interceptors
-- [ ] Add automatic token attachment
-- [ ] Implement token refresh logic
-- [ ] Add request/response logging
+- [ ] Doctor availability checker:
+  ```typescript
+  // components/appointments/DoctorAvailability.tsx
+  // Real-time availability from API
+  // Working hours display
+  // Busy/available status
+  ```
 
-**API Service Classes:**
+**📱 Mobile Optimization:**
 
-- [ ] Create `doctors.api.ts`
-- [ ] Create `appointments.api.ts`
-- [ ] Create `treatments.api.ts`
-- [ ] Create `notifications.api.ts`
-- [ ] Create `patients.api.ts`
+- [ ] Responsive calendar cho mobile devices
+- [ ] Touch-friendly time slot selection
+- [ ] Mobile-optimized appointment forms
 
-**TypeScript Types:**
+**Definition of Done:**
 
-- [ ] Define `Doctor` interface
-- [ ] Define `Appointment` interface
-- [ ] Define `Treatment` interface
-- [ ] Define `Notification` interface
-- [ ] Define API response wrappers
-- [ ] Add error response types
-
-**Error Handling:**
-
-- [ ] Create global error handler
-- [ ] Add network error handling
-- [ ] Implement retry logic
-- [ ] Add user-friendly error messages
-
----
-
-### 🆕 FE005: Doctor Listing Page - FULL TASKS
-
-**Doctor Cards:**
-
-- [ ] Create DoctorCard component
-- [ ] Add doctor photo, name, specialization
-- [ ] Add rating stars component
-- [ ] Add experience years display
-- [ ] Add consultation fee display
-
-**Search & Filter:**
-
-- [ ] Create search input component
-- [ ] Add specialization filter dropdown
-- [ ] Add experience filter (years)
-- [ ] Add rating filter
-- [ ] Add availability filter
-
-**List Management:**
-
-- [ ] Implement pagination component
-- [ ] Add sorting options (name, rating, experience)
-- [ ] Create loading skeleton for cards
-- [ ] Add empty state handling
-
-**Doctor Details:**
-
-- [ ] Create doctor detail modal
-- [ ] Add detailed information display
-- [ ] Add education and certification
-- [ ] Add patient reviews section
-- [ ] Add "Book Appointment" button
-
-**Additional Features:**
-
-- [ ] Implement favorite doctors feature
-- [ ] Add recently viewed doctors
-- [ ] Make fully responsive for mobile
-- [ ] Add share doctor profile feature
+- ✅ Calendar interface functional và intuitive
+- ✅ Appointment booking working end-to-end
+- ✅ Conflict detection preventing double booking
+- ✅ Reschedule/cancel operations functional
+- ✅ Doctor availability accurate
+- ✅ Mobile responsive
 
 ---
 
-## 🛠 TECHNICAL SPECIFICATIONS
+### **Issue #FE010: Test Results Display Interface**
 
-### Required Dependencies (Install if needed):
+**Assignee**: FE2  
+**Priority**: MEDIUM  
+**Story Points**: 6  
+**Status**: 📋 READY TO START
 
-```bash
-# For charts (FE012) - RECOMMENDED: Recharts
-npm install recharts
-# Reason: Better TypeScript support, lighter than Chart.js, good Tailwind integration
+**Description:**
+Tạo giao diện hiển thị kết quả xét nghiệm với visualization và tracking capabilities.
 
-# For calendar (FE008, FE014) - RECOMMENDED: React Big Calendar
-npm install react-big-calendar
-# Reason: More flexible than FullCalendar, better React integration
+**Acceptance Criteria:**
 
-# For drag-drop (FE014)
-npm install @dnd-kit/core @dnd-kit/sortable
+**📊 Results Dashboard:**
 
-# For date handling
-npm install date-fns
-# Alternative: npm install dayjs (lighter alternative)
+- [ ] Test results overview:
+  ```typescript
+  // pages/TestResults.tsx
+  // Recent results summary
+  // Filter by test type/date range
+  // Results status indicators
+  ```
+- [ ] Results data table:
+  ```typescript
+  // components/medical/ResultsTable.tsx
+  // Sortable table với test results
+  // Status indicators (Normal/Abnormal/Critical)
+  // Link to detailed result view
+  ```
 
-# For testing (RECOMMENDED ADDITIONS)
-npm install --save-dev @testing-library/react @testing-library/jest-dom
-npm install --save-dev vitest @vitejs/plugin-react
+**📈 Data Visualization:**
 
-# For performance monitoring (OPTIONAL)
-npm install web-vitals
-```
+- [ ] Results trend charts:
+  ```typescript
+  // components/medical/ResultsTrendChart.tsx
+  // Line charts cho hormone levels
+  // Compare với reference ranges
+  // Historical trend analysis
+  ```
+- [ ] Test type categorization:
+  ```typescript
+  // components/medical/TestTypeFilter.tsx
+  // Filter by BloodTest/Ultrasound/HormoneLevel
+  // Quick access to specific test types
+  ```
 
-### Folder Structure Additions Needed:
+**🔍 Detailed Result View:**
 
-```
-src/
-  components/
-    doctors/          # FE005
-    appointments/     # FE008
-    treatments/       # FE007
-    notifications/    # FE009
-    charts/          # FE012
-  types/
-    api/             # All API interfaces
-    components/      # Component prop types
-  utils/
-    constants/       # API endpoints, etc.
-    formatters/      # Date, currency formatters
-    performance/     # Performance utilities
-  __tests__/         # Test files
-    components/      # Component tests
-    pages/          # Page tests
-    utils/          # Utility tests
-```
+- [ ] Individual result details:
+  ```typescript
+  // components/medical/ResultDetails.tsx
+  // Full test result with reference ranges
+  // Doctor notes và interpretation
+  // Related appointment information
+  ```
+- [ ] Test result comparison:
+  ```typescript
+  // components/medical/ResultComparison.tsx
+  // Compare current với previous results
+  // Reference range visualization
+  // Progress indicators
+  ```
 
----
+**📄 Result Actions:**
 
-# 🧪 TESTING STRATEGY & MILESTONES
+- [ ] Export functionality:
+  ```typescript
+  // Export results to PDF
+  // Share với healthcare providers
+  // Print-friendly format
+  ```
+- [ ] Result sharing:
+  ```typescript
+  // Share specific results với doctor
+  // Email result summary
+  ```
 
-## Testing Implementation Plan
+**🔔 Alert System:**
 
-### Week 2 Testing Targets:
-- [ ] Basic component tests for UI components
-- [ ] API service integration tests
-- [ ] Authentication flow tests
+- [ ] Critical result alerts:
+  ```typescript
+  // components/medical/CriticalAlerts.tsx
+  // Highlight abnormal/critical results
+  // Action required notifications
+  ```
 
-### Week 3 Testing Targets:
-- [ ] User workflow tests (login → dashboard → actions)
-- [ ] Appointment booking flow tests
-- [ ] Form validation tests
+**Definition of Done:**
 
-### Week 4+ Testing Targets:
-- [ ] E2E tests for critical user journeys
-- [ ] Performance tests with Lighthouse
-- [ ] Cross-browser compatibility tests
-
-## Code Quality Standards
-
-```typescript
-// Implement from start:
-- ESLint strict rules with TypeScript
-- Prettier formatting with Tailwind plugin
-- Husky pre-commit hooks
-- TypeScript strict mode enabled
-- Component prop types validation
-```
-
----
-
-# 🚀 PERFORMANCE CONSIDERATIONS
-
-## Immediate Implementation (Week 2):
-
-### Code Splitting:
-```typescript
-// Route-based lazy loading
-const Dashboard = lazy(() => import('@/pages/Dashboard'))
-const DoctorList = lazy(() => import('@/pages/DoctorList'))
-
-// Component-based splitting for heavy components
-const Calendar = lazy(() => import('@/components/Calendar'))
-```
-
-### React Optimization:
-```typescript
-// Use React.memo for heavy components
-const DoctorCard = React.memo(({ doctor }) => { ... })
-
-// Use useMemo for expensive calculations
-const filteredDoctors = useMemo(() => 
-  doctors.filter(d => d.specialization === filter), [doctors, filter]
-)
-
-// Use useCallback for event handlers
-const handleSearch = useCallback((query) => { ... }, [dependencies])
-```
-
-### Image Optimization:
-```typescript
-// Implement lazy loading for images
-<img loading="lazy" src={doctor.photo} alt={doctor.name} />
-
-// Use appropriate image formats (WebP with fallback)
-// Implement image compression
-```
-
-## Performance Targets:
-- **LCP (Largest Contentful Paint)**: < 2.5s
-- **FID (First Input Delay)**: < 100ms
-- **CLS (Cumulative Layout Shift)**: < 0.1
-- **Bundle Size**: < 1MB gzipped
+- ✅ Test results displayed clearly và accurately
+- ✅ Data visualization helping users understand trends
+- ✅ Filter và search functionality working
+- ✅ Export và sharing features functional
+- ✅ Critical alerts prominently displayed
+- ✅ Responsive design for mobile
 
 ---
 
-# 📊 SUCCESS METRICS & MILESTONES
+### **Issue #FE011: Enhanced Dashboard with Real Data**
 
-## Week 2 Completion Criteria:
-- [ ] API Integration: 100% complete with error handling
-- [ ] Dashboard: 90% complete (basic profile + emergency contacts)
-- [ ] Doctor Listing: 70% complete (MVP with search)
-- [ ] Testing: Basic component tests implemented
-- [ ] Performance: Code splitting implemented
-- [ ] **Overall Progress**: ~55% (vs current 35%)
+**Assignee**: FE1  
+**Priority**: MEDIUM  
+**Story Points**: 4  
+**Status**: 📋 READY TO START
 
-## Week 3 Completion Criteria:
-- [ ] Appointments: 80% complete (calendar + booking)
-- [ ] Notifications: 90% complete (center + real-time)
-- [ ] Treatment Cycles: 60% complete (overview + creation)
-- [ ] Testing: User workflow tests implemented
-- [ ] Performance: Image optimization + lazy loading
-- [ ] **Overall Progress**: ~75%
+**Description:**
+Cải thiện dashboard để hiển thị real data từ API với enhanced widgets và real-time updates.
 
-## Week 4+ Completion Criteria:
-- [ ] Test Results: 90% complete
-- [ ] Progress Tracking: 85% complete
-- [ ] Data Visualization: 80% complete
-- [ ] Testing: E2E tests for critical flows
-- [ ] Performance: Lighthouse score > 90
-- [ ] **Overall Progress**: ~90%
+**Acceptance Criteria:**
+
+**📊 Customer Dashboard Enhancements:**
+
+- [ ] Real data integration:
+  ```typescript
+  // Replace mock stats với real API data
+  // Current treatment cycle từ API
+  // Upcoming appointments từ API
+  // Recent test results từ API
+  ```
+- [ ] Enhanced metrics widgets:
+  ```typescript
+  // components/dashboard/MetricsWidget.tsx
+  // Treatment progress percentage
+  // Days until next appointment
+  // Test results trend indicators
+  ```
+
+**👨‍⚕️ Doctor Dashboard:**
+
+- [ ] Doctor-specific dashboard:
+  ```typescript
+  // pages/DoctorDashboard.tsx
+  // Today's patient list
+  // Performance metrics
+  // Pending tasks (results to review)
+  ```
+- [ ] Patient management widgets:
+  ```typescript
+  // components/dashboard/PatientWidget.tsx
+  // Active patients list
+  // Critical alerts
+  // Appointment schedule
+  ```
+
+**🏥 Manager Dashboard:**
+
+- [ ] System overview dashboard:
+  ```typescript
+  // pages/ManagerDashboard.tsx
+  // System-wide statistics
+  // Success rates by treatment type
+  // Revenue metrics
+  ```
+
+**🔄 Real-time Updates:**
+
+- [ ] Auto-refresh functionality:
+  ```typescript
+  // Auto-refresh critical data every 5 minutes
+  // Manual refresh button
+  // Last updated timestamp display
+  ```
+
+**📱 Mobile Dashboard:**
+
+- [ ] Mobile-optimized dashboard layout
+- [ ] Touch-friendly interactions
+- [ ] Simplified mobile widgets
+
+**Definition of Done:**
+
+- ✅ Dashboard displays real data from APIs
+- ✅ Role-based dashboard content working
+- ✅ Metrics accurate và up-to-date
+- ✅ Auto-refresh functionality working
+- ✅ Mobile dashboard responsive
 
 ---
 
-# ⚠️ RISK MITIGATION
+### **Issue #FE012: Core UI Components Enhancement**
 
-## High-Risk Dependencies:
-1. **FE006 API Integration** - Blocks 70% of features
-   - **Mitigation**: Complete within 3 days, daily progress check
+**Assignee**: FE2  
+**Priority**: LOW  
+**Story Points**: 3  
+**Status**: 📋 READY TO START
 
-2. **Calendar Component Complexity** - May cause FE008 delays
-   - **Mitigation**: Start with simple version, enhance later
+**Description:**
+Enhance existing UI components và create missing reusable components.
 
-3. **Real-time Notifications** - WebSocket complexity
-   - **Mitigation**: Use polling initially, upgrade to WebSocket later
+**Acceptance Criteria:**
 
-## Parallel Development Risks:
-- **API interface conflicts** between FE1 and FE2
-- **Mitigation**: Complete FE006 first, establish API contracts
+**🎨 Component Library Extensions:**
+
+- [ ] Enhanced form components:
+  ```typescript
+  // components/ui/enhanced-form.tsx
+  // Better form validation display
+  // Auto-save capabilities
+  // Form progress indicators
+  ```
+- [ ] Data display components:
+  ```typescript
+  // components/ui/data-table.tsx
+  // Advanced table với sorting/filtering
+  // Export functionality
+  // Responsive table design
+  ```
+
+**📊 Chart Components:**
+
+- [ ] Medical chart components:
+  ```typescript
+  // components/ui/medical-chart.tsx
+  // Line charts cho test results
+  // Progress charts cho treatment
+  // Reference range overlays
+  ```
+
+**🔔 Notification Improvements:**
+
+- [ ] Enhanced notification system:
+  ```typescript
+  // components/ui/notification-center.tsx
+  // Notification history
+  // Mark as read functionality
+  // Notification categories
+  ```
+
+**📱 Mobile Components:**
+
+- [ ] Mobile-specific components:
+  ```typescript
+  // components/ui/mobile-menu.tsx
+  // components/ui/mobile-card.tsx
+  // Touch-optimized interactions
+  ```
+
+**Definition of Done:**
+
+- ✅ Component library enhanced và reusable
+- ✅ Chart components functional
+- ✅ Notification system improved
+- ✅ Mobile components optimized
+- ✅ All components documented
 
 ---
 
-# 📋 WEEKLY REVIEW CHECKLIST
+## 🗓️ **WEEK 3 TIMELINE**
 
-## End of Week 2 Review:
-- [ ] All critical APIs functional
-- [ ] Dashboard forms working end-to-end
-- [ ] Doctor listing MVP complete
-- [ ] No major technical debt
-- [ ] Performance baseline established
+### **Day 1-2 (Mon-Tue): API Integration Foundation**
 
-## End of Week 3 Review:
-- [ ] Appointment booking fully functional
-- [ ] Notification system working
-- [ ] Treatment cycles basic version complete
-- [ ] User testing feedback incorporated
-- [ ] Performance targets met
+- **FE1**: Complete Issue #FE007 (API Integration Setup)
+- **FE2**: Start Issue #FE008 (Treatment Cycle UI - Package Selection)
 
-## End of Week 4+ Reviews:
-- [ ] All major features functional
-- [ ] Testing coverage > 80%
-- [ ] Performance score > 90
-- [ ] Cross-browser compatibility verified
-- [ ] Ready for production deployment
+### **Day 3-4 (Wed-Thu): Core Features Development**
+
+- **FE1**: Start Issue #FE009 (Appointment Booking System)
+- **FE2**: Continue Issue #FE008 (Treatment Cycle UI - Cycle Tracking)
+
+### **Day 5-6 (Fri-Sat): Feature Completion**
+
+- **FE1**: Continue Issue #FE009 + Start Issue #FE011 (Enhanced Dashboard)
+- **FE2**: Start Issue #FE010 (Test Results Display)
+
+### **Day 7 (Sun): Integration & Testing**
+
+- **Both**: Complete remaining issues + Issue #FE012 (UI Components)
+- **Integration testing**: All features working together
+- **Bug fixes**: Resolve integration issues
+
+---
+
+## ✅ **DEFINITION OF DONE - SPRINT 3**
+
+### **Technical Requirements:**
+
+- [ ] All API endpoints integrated và functional
+- [ ] No mock data remaining in production code
+- [ ] Error handling comprehensive và user-friendly
+- [ ] Loading states implemented cho all async operations
+- [ ] TypeScript types accurate với API responses
+
+### **Feature Requirements:**
+
+- [ ] Treatment cycle creation và management working
+- [ ] Appointment booking flow complete end-to-end
+- [ ] Test results display functional với basic visualization
+- [ ] Dashboard showing real data from APIs
+- [ ] Mobile responsive design maintained
+
+### **Quality Requirements:**
+
+- [ ] No console errors in production build
+- [ ] Performance: Page load times under 3 seconds
+- [ ] Accessibility: Basic WCAG compliance
+- [ ] Browser compatibility: Chrome, Firefox, Safari, Edge
+- [ ] Code review completed cho all major features
+
+### **User Experience Requirements:**
+
+- [ ] Intuitive navigation between features
+- [ ] Consistent design language throughout
+- [ ] Clear success/error feedback cho user actions
+- [ ] Help text/tooltips cho complex features
+- [ ] Smooth transitions và animations
+
+---
+
+## 🚨 **RISKS & MITIGATION**
+
+### **High Risk:**
+
+1. **API Integration Complexity**
+
+   - _Mitigation_: Start với simple endpoints, test thoroughly
+   - _Backup_: Have mock data fallback ready
+
+2. **Backend API Changes**
+   - _Mitigation_: Coordinate closely với BE team
+   - _Backup_: Version API calls, handle gracefully
+
+### **Medium Risk:**
+
+1. **Complex Calendar Implementation**
+
+   - _Mitigation_: Use proven library (react-big-calendar)
+   - _Backup_: Simplified date picker interface
+
+2. **Performance với Real Data**
+   - _Mitigation_: Implement proper pagination và caching
+   - _Backup_: Lazy loading và code splitting
+
+### **Dependencies:**
+
+- **Backend APIs**: Must be stable và documented
+- **Design System**: Shadcn UI components availability
+- **External Libraries**: Calendar, charting libraries
+
+---
+
+## 🎯 **SUCCESS METRICS**
+
+### **Completion Metrics:**
+
+- [ ] 100% of planned story points completed
+- [ ] All critical path features functional
+- [ ] Zero blocking bugs for Week 4
+
+### **Quality Metrics:**
+
+- [ ] <200ms average API response time
+- [ ] > 95% API success rate
+- [ ] Zero accessibility violations on main flows
+
+### **User Experience Metrics:**
+
+- [ ] Intuitive user flows (validated với team testing)
+- [ ] Responsive design working on all target devices
+- [ ] Consistent error handling experience
+
+**Sprint Success Criteria**: Có thể demo hoàn chỉnh main treatment flow từ registration đến appointment booking với real data!
