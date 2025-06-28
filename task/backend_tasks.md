@@ -571,7 +571,7 @@ Implement basic notification system cho appointments và treatment updates.
 
 ---
 
-# Week 5: Test Results & Medication Management (🚧 IN PROGRESS)
+# Week 5: Test Results & Medication Management (✅ COMPLETED)
 
 ## 🎯 Sprint Goals
 
@@ -691,55 +691,7 @@ Implement TreatmentPhase entity và core Test Results management system.
 
 ---
 
-### Issue #BE015: Enhanced Email & Notification Integration (🚧 IN PROGRESS)
-
-**Assignee**: BE1  
-**Priority**: MEDIUM  
-**Story Points**: 5
-
-**Description:**
-Complete notification system với email integration và automatic triggers.
-
-**Acceptance Criteria:**
-
-- [ ] Complete IEmailService implementation:
-  - SendEmailAsync(EmailDto emailDto)
-  - SendTemplateEmailAsync(string template, object data, string toEmail)
-- [ ] Create essential email templates:
-  - Appointment confirmation
-  - Appointment reminder (24h before)
-  - Test results available notification
-  - Critical test result alert
-- [ ] Implement automatic notification triggers:
-  - When appointment is created/confirmed
-  - When test results are added
-  - When treatment cycle status changes
-  - When critical test results are flagged
-- [ ] Add EmailService registration trong DI container
-- [ ] Create email configuration:
-  - SMTP settings trong appsettings
-  - Email template structure
-- [ ] Update NotificationService với email integration:
-  - Auto-send emails for critical notifications
-  - Link notifications với related entities
-  - Email delivery status tracking
-- [ ] Add basic email queue mechanism:
-  - Simple in-memory queue for email sending
-  - Background service for processing emails
-  - Error handling và retry logic
-- [ ] Implement email preferences:
-  - User can enable/disable email notifications
-  - Different notification types configuration
-
-**Definition of Done:**
-
-- Email service functional với SMTP
-- Essential email templates working
-- Automatic notifications triggered by system events
-- Email-notification integration complete
-- Basic email queue working
-- Email configuration ready for production
-- User email preferences functional
+---
 
 ---
 
@@ -806,94 +758,6 @@ Complete system integration và prepare foundation cho Week 6 advanced features.
 
 ---
 
-# Week 6: Medication Management & Advanced Features
-
-## 🎯 Sprint Goals
-
-- Complete medication và prescription system
-- Implement review và rating system
-- Advanced analytics foundation
-- System integration và optimization
-
-### Issue #BE017: Complete Medication & Prescription System (🚧 IN PROGRESS)
-
-**Assignee**: BE2  
-**Priority**: HIGH  
-**Story Points**: 8
-
-**Description:**
-Implement full medication management và prescription tracking system.
-
-**Acceptance Criteria:**
-
-- [ ] Uncomment và implement Medication/Prescription DbSets:
-  ```csharp
-  public DbSet<Medication> Medications { get; set; }
-  public DbSet<Prescription> Prescriptions { get; set; }
-  ```
-- [ ] Create migration cho medication entities:
-  ```bash
-  dotnet ef migrations add AddMedicationsAndPrescriptions --startup-project API
-  ```
-- [ ] Implement missing repositories:
-  - IMedicationRepository & MedicationRepository
-  - IPrescriptionRepository & PrescriptionRepository
-  - Add to UnitOfWork
-- [ ] Create IMedicationService:
-  - GetAllMedicationsAsync() → List<MedicationDto>
-  - GetMedicationByIdAsync(int id) → MedicationDetailDto
-  - CreateMedicationAsync(CreateMedicationDto) - admin only
-  - UpdateMedicationAsync(int medicationId, UpdateMedicationDto)
-  - SearchMedicationsAsync(string searchTerm) → List<MedicationDto>
-- [ ] Create IPrescriptionService:
-  - CreatePrescriptionAsync(CreatePrescriptionDto) - doctor only
-  - GetPrescriptionsByPatientAsync(int customerId) → List<PrescriptionDto>
-  - GetPrescriptionsByDoctorAsync(int doctorId) → List<PrescriptionDto>
-  - UpdatePrescriptionAsync(int prescriptionId, UpdatePrescriptionDto)
-  - DiscontinuePrescriptionAsync(int prescriptionId)
-  - GetActivePrescriptionsAsync(int customerId) → List<PrescriptionDto>
-- [ ] Create controllers:
-
-  ```csharp
-  MedicationsController:
-  - GET /api/medications
-  - POST /api/medications (Admin only)
-
-  PrescriptionsController:
-  - POST /api/prescriptions (Doctor only)
-  - GET /api/prescriptions (filtered by patient/doctor)
-  - PUT /api/prescriptions/{id}
-  - GET /api/customers/{id}/prescriptions
-  ```
-
-- [ ] Implement prescription-phase integration:
-  - Link prescriptions to treatment phases
-  - Automatic prescription suggestions based on phase
-- [ ] Add comprehensive safety validations:
-  - Dosage validation
-  - Drug interaction basic checking (simplified)
-  - Allergy checking với patient medical history
-  - Prescription date validations
-- [ ] Implement prescription status tracking:
-  - Active/Completed/Discontinued/Expired
-  - Automatic status updates
-- [ ] Add prescription notifications:
-  - New prescription notification
-  - Medication reminder notifications
-  - Prescription expiry warnings
-
-**Definition of Done:**
-
-- Medication CRUD fully functional với search
-- Prescription system integrated với treatment phases
-- Doctor can prescribe medications với safety checks
-- Patient can view prescription history và active medications
-- Comprehensive safety validations implemented
-- Prescription status tracking working
-- Automatic notifications for prescriptions
-
----
-
 ### Issue #BE018: Review & Rating System (✅ COMPLETED)
 
 **Assignee**: BE1  
@@ -942,291 +806,1068 @@ Implement review và rating system cho doctors và services.
 
 ---
 
-### Issue #BE019: Analytics & Dashboard Foundation (🚧 IN PROGRESS)
+# Week 6 Foundation Fixes - Critical Issues
+
+## 🚨 **URGENT: Pre-Week 6 Foundation Completion**
+
+**Phát hiện:** Dự án BE chưa đủ điều kiện triển khai Week 6 do thiếu sót trong foundation layer.
+**Timeline:** 1-2 ngày để fix trước khi start Week 6 tasks
+**Priority:** CRITICAL - Blocking Week 6 implementation
+
+---
+
+## Issue #BE-FIX001: Complete UnitOfWork Repository Integration
+
+**Assignee**: BE1  
+**Priority**: CRITICAL  
+**Story Points**: 4  
+**Timeline**: 1 day
+
+### **Description:**
+
+UnitOfWork interface và implementation thiếu 5 repositories quan trọng, gây ra dependency injection failures và không thể access các entities key.
+
+### **Current Problem:**
+
+```csharp
+// IUnitOfWork.cs - Missing repositories:
+ITreatmentServiceRepository TreatmentServices { get; }  ❌
+ITreatmentPackageRepository TreatmentPackages { get; }  ❌
+ITreatmentPhaseRepository TreatmentPhases { get; }      ❌
+ITestResultRepository TestResults { get; }             ❌
+INotificationRepository Notifications { get; }         ❌
+```
+
+### **Acceptance Criteria:**
+
+#### **1. Update IUnitOfWork Interface**
+
+```csharp
+// File: InfertilityTreatment.Data/Repositories/Interfaces/IUnitOfWork.cs
+public interface IUnitOfWork : IDisposable
+{
+    // Existing repositories...
+    IUserRepository Users { get; }
+    ICustomerRepository Customers { get; }
+    ITreatmentCycleRepository TreatmentCycles { get; }
+    IRefreshTokenRepository RefreshTokens { get; }
+    IAppointmentRepository Appointments { get; }
+    IDoctorRepository Doctors { get; }
+    IDoctorScheduleRepository DoctorSchedules { get; }
+    IMedicationRepository Medications { get; }
+    IPrescriptionRepository Prescriptions { get; }
+    IReviewRepository Reviews { get; }
+
+    // ADD MISSING REPOSITORIES:
+    ITreatmentServiceRepository TreatmentServices { get; }
+    ITreatmentPackageRepository TreatmentPackages { get; }
+    ITreatmentPhaseRepository TreatmentPhases { get; }
+    ITestResultRepository TestResults { get; }
+    INotificationRepository Notifications { get; }
+
+    // Transaction Methods
+    Task<int> SaveChangesAsync();
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
+}
+```
+
+#### **2. Update UnitOfWork Implementation**
+
+```csharp
+// File: InfertilityTreatment.Data/Repositories/Implementations/UnitOfWork.cs
+public class UnitOfWork : IUnitOfWork
+{
+    // ADD missing private fields:
+    private ITreatmentServiceRepository? _treatmentServices;
+    private ITreatmentPackageRepository? _treatmentPackages;
+    private ITreatmentPhaseRepository? _treatmentPhases;
+    private ITestResultRepository? _testResults;
+    private INotificationRepository? _notifications;
+
+    // ADD missing lazy loading properties:
+    public ITreatmentServiceRepository TreatmentServices =>
+        _treatmentServices ??= new TreatmentServiceRepository(_context);
+
+    public ITreatmentPackageRepository TreatmentPackages =>
+        _treatmentPackages ??= new TreatmentPackageRepository(_context);
+
+    public ITreatmentPhaseRepository TreatmentPhases =>
+        _treatmentPhases ??= new TreatmentPhaseRepository(_context);
+
+    public ITestResultRepository TestResults =>
+        _testResults ??= new TestResultRepository(_context);
+
+    public INotificationRepository Notifications =>
+        _notifications ??= new NotificationRepository(_context);
+}
+```
+
+#### **3. Verify All Repository Implementations Exist**
+
+- [ ] Confirm TreatmentServiceRepository.cs exists và implements ITreatmentServiceRepository
+- [ ] Confirm TreatmentPackageRepository.cs exists và implements ITreatmentPackageRepository
+- [ ] Confirm TreatmentPhaseRepository.cs exists và implements ITreatmentPhaseRepository
+- [ ] Confirm TestResultRepository.cs exists và implements ITestResultRepository
+- [ ] Confirm NotificationRepository.cs exists và implements INotificationRepository
+
+### **Definition of Done:**
+
+- [ ] All missing repositories added to IUnitOfWork interface
+- [ ] UnitOfWork implementation updated với lazy loading
+- [ ] All repository implementations verified
+- [ ] Build successful without errors
+- [ ] Existing APIs still functional after changes
+
+### **Testing:**
+
+```bash
+# Verify build success
+dotnet build InfertilityTreatment.sln
+
+# Test existing controllers still work
+dotnet run --project InfertilityTreatment.API
+# Access: https://localhost:7000/swagger
+# Test: GET /api/test/protected endpoint
+```
+
+---
+
+## Issue #BE-FIX002: Complete Service Registration & Dependency Injection
+
+**Assignee**: BE2  
+**Priority**: CRITICAL  
+**Story Points**: 3  
+**Timeline**: 1 day
+
+### **Description:**
+
+ServiceCollectionExtensions.cs thiếu service registrations cho several key services, gây ra runtime dependency injection errors.
+
+### **Current Problem:**
+
+```csharp
+// Missing service registrations:
+ITestResultService, TestResultService                   ❌
+ITreatmentPhaseService, TreatmentPhaseService           ❌
+INotificationService, NotificationService               ❌
+```
+
+### **Acceptance Criteria:**
+
+#### **1. Update ServiceCollectionExtensions.cs**
+
+```csharp
+// File: InfertilityTreatment.API/Extensions/ServiceCollectionExtensions.cs
+public static IServiceCollection AddBusinessServices(this IServiceCollection services)
+{
+    // ... existing registrations ...
+
+    // ADD MISSING SERVICE REGISTRATIONS:
+    services.AddScoped<ITestResultService, TestResultService>();
+    services.AddScoped<ITreatmentPhaseService, TreatmentPhaseService>();
+    services.AddScoped<INotificationService, NotificationService>();
+
+    // Verify existing critical services are registered:
+    services.AddScoped<IEmailService, EmailService>();
+    services.AddScoped<ICycleService, CycleService>();
+
+    return services;
+}
+```
+
+#### **2. Create Missing Service Interfaces (if needed)**
+
+```csharp
+// Verify these interfaces exist:
+// - ITestResultService ✅ (exists)
+// - ITreatmentPhaseService ❌ (may need creation)
+// - INotificationService ✅ (exists)
+```
+
+#### **3. Create ITreatmentPhaseService if missing**
+
+```csharp
+// File: InfertilityTreatment.Business/Interfaces/ITreatmentPhaseService.cs
+public interface ITreatmentPhaseService
+{
+    Task<TreatmentPhaseDto> CreatePhaseAsync(CreateTreatmentPhaseDto dto);
+    Task<List<TreatmentPhaseDto>> GetPhasesByCycleAsync(int cycleId);
+    Task<TreatmentPhaseDto> GetPhaseByIdAsync(int phaseId);
+    Task<TreatmentPhaseDto> UpdatePhaseAsync(int phaseId, UpdateTreatmentPhaseDto dto);
+    Task<bool> DeletePhaseAsync(int phaseId);
+}
+
+// File: InfertilityTreatment.Business/Services/TreatmentPhaseService.cs
+public class TreatmentPhaseService : ITreatmentPhaseService
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public TreatmentPhaseService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    // Implement basic CRUD methods
+}
+```
+
+#### **4. Verify All Services Have Proper Dependencies**
+
+- [ ] Check all services can resolve their dependencies
+- [ ] Verify circular dependency issues resolved
+- [ ] Confirm service lifetimes appropriate (Scoped for business services)
+
+### **Definition of Done:**
+
+- [ ] All missing services registered in DI container
+- [ ] ITreatmentPhaseService created if needed
+- [ ] No dependency injection runtime errors
+- [ ] All controllers can resolve their service dependencies
+- [ ] Application starts successfully
+
+### **Testing:**
+
+```bash
+# Test DI resolution
+dotnet run --project InfertilityTreatment.API
+
+# Verify no DI errors in startup logs
+# Test controllers that use missing services:
+# - TestResultController
+# - TreatmentCyclesController (for phases)
+# - NotificationsController
+```
+
+---
+
+## Issue #BE-FIX003: Create Week 6 Foundation Services Structure
+
+**Assignee**: BE1  
+**Priority**: HIGH  
+**Story Points**: 5  
+**Timeline**: 1 day
+
+### **Description:**
+
+Tạo foundation structure cho Week 6 services để prepare cho implementation. Không cần full implementation, chỉ cần interfaces và basic structure.
+
+### **Acceptance Criteria:**
+
+#### **1. Create Analytics Service Foundation**
+
+```csharp
+// File: InfertilityTreatment.Business/Interfaces/IAnalyticsService.cs
+public interface IAnalyticsService
+{
+    // Prepare for BE019: Analytics & Dashboard Foundation
+    Task<DashboardStatsDto> GetDashboardStatsAsync(UserRole role, int userId, DateRangeDto dateRange);
+    Task<List<TreatmentSuccessRateDto>> GetTreatmentSuccessRatesAsync();
+    Task<RevenueReportDto> GetRevenueReportAsync(RevenueFilterDto filter);
+    Task<DoctorPerformanceDto> GetDoctorPerformanceAsync(int doctorId);
+}
+
+// File: InfertilityTreatment.Business/Services/AnalyticsService.cs
+public class AnalyticsService : IAnalyticsService
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AnalyticsService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    // Basic stub implementations
+    public async Task<DashboardStatsDto> GetDashboardStatsAsync(UserRole role, int userId, DateRangeDto dateRange)
+    {
+        // TODO: Implement in BE019
+        return new DashboardStatsDto();
+    }
+
+    // ... other stub methods
+}
+```
+
+#### **2. Create Payment Service Foundation**
+
+```csharp
+// File: InfertilityTreatment.Business/Interfaces/IPaymentService.cs
+public interface IPaymentService
+{
+    // Prepare for BE021: Payment Gateway Integration
+    Task<PaymentResponseDto> CreateVNPayPaymentAsync(CreatePaymentDto dto);
+    Task<PaymentResponseDto> CreateMomoPaymentAsync(CreatePaymentDto dto);
+    Task<bool> HandleVNPayCallbackAsync(VNPayCallbackDto dto);
+    Task<bool> HandleMomoCallbackAsync(MomoCallbackDto dto);
+    Task<List<PaymentDto>> GetPaymentHistoryAsync(int customerId);
+}
+
+// File: InfertilityTreatment.Business/Services/PaymentService.cs
+public class PaymentService : IPaymentService
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public PaymentService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    // Stub implementations
+    public async Task<PaymentResponseDto> CreateVNPayPaymentAsync(CreatePaymentDto dto)
+    {
+        // TODO: Implement in BE021
+        throw new NotImplementedException("Will be implemented in BE021");
+    }
+
+    // ... other stub methods
+}
+```
+
+#### **3. Create Booking Service Foundation**
+
+```csharp
+// File: InfertilityTreatment.Business/Interfaces/IBookingService.cs
+public interface IBookingService
+{
+    // Prepare for BE023: Enhanced Booking System
+    Task<BookingResponseDto> BookTreatmentCycleAsync(BookTreatmentDto dto);
+    Task<List<TimeSlotDto>> GetAvailableSlotsAsync(AvailabilityFilterDto filter);
+    Task<AppointmentDto> BookDoctorAppointmentAsync(BookAppointmentDto dto);
+    Task<bool> RescheduleBookingAsync(int bookingId, RescheduleDto dto);
+    Task<bool> CancelBookingAsync(int bookingId, CancellationDto dto);
+}
+
+// File: InfertilityTreatment.Business/Services/BookingService.cs
+public class BookingService : IBookingService
+{
+    private readonly IUnitOfWork _unitOfWork;
+
+    public BookingService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    // Stub implementations for Week 6
+}
+```
+
+#### **4. Create Basic DTOs Structure**
+
+```csharp
+// File: InfertilityTreatment.Entity/DTOs/Analytics/
+// - DashboardStatsDto.cs
+// - TreatmentSuccessRateDto.cs
+// - RevenueReportDto.cs
+// - DoctorPerformanceDto.cs
+
+// File: InfertilityTreatment.Entity/DTOs/Payments/
+// - CreatePaymentDto.cs
+// - PaymentResponseDto.cs
+// - PaymentDto.cs
+// - VNPayCallbackDto.cs
+// - MomoCallbackDto.cs
+
+// File: InfertilityTreatment.Entity/DTOs/Bookings/
+// - BookTreatmentDto.cs
+// - BookingResponseDto.cs
+// - AvailabilityFilterDto.cs
+// - TimeSlotDto.cs
+```
+
+#### **5. Register Foundation Services**
+
+```csharp
+// Add to ServiceCollectionExtensions.cs:
+services.AddScoped<IAnalyticsService, AnalyticsService>();
+services.AddScoped<IPaymentService, PaymentService>();
+services.AddScoped<IBookingService, BookingService>();
+```
+
+### **Definition of Done:**
+
+- [ ] All foundation service interfaces created
+- [ ] Basic service implementations with stubs
+- [ ] DTOs structure created for Week 6 features
+- [ ] Services registered in DI container
+- [ ] Application compiles và runs successfully
+- [ ] Foundation ready cho Week 6 feature implementation
+
+---
+
+## Issue #BE-FIX004: Database Optimization & Performance Indexes
 
 **Assignee**: BE2  
 **Priority**: MEDIUM  
-**Story Points**: 5
+**Story Points**: 3  
+**Timeline**: 0.5 day
 
-**Description:**
-Create analytics foundation và basic dashboard APIs.
+### **Description:**
 
-**Acceptance Criteria:**
+Add critical database indexes để improve performance cho Week 6 analytics và payment features.
 
-- [ ] Create IAnalyticsService:
-  - GetTreatmentSuccessRatesAsync() → TreatmentAnalyticsDto
-  - GetDoctorPerformanceAsync(int doctorId) → DoctorPerformanceDto
-  - GetPatientSatisfactionAsync() → SatisfactionMetricsDto
-  - GetSystemOverviewAsync() → SystemOverviewDto
-- [ ] Create AnalyticsController:
-  ```csharp
-  GET /api/analytics/success-rates
-  GET /api/analytics/doctor-performance/{id}
-  GET /api/analytics/patient-satisfaction
-  GET /api/analytics/overview
-  ```
-- [ ] Implement basic dashboard data:
-  - Customer dashboard: current cycle, appointments, test results
-  - Doctor dashboard: today's appointments, patient count
-  - Manager dashboard: system statistics, success rates
-- [ ] Create IDashboardService với basic implementations
-- [ ] Add caching cho analytics data:
-  - Cache success rate calculations
-  - Refresh cache when data changes
+### **Acceptance Criteria:**
 
-**Definition of Done:**
+#### **1. Create Performance Migration**
 
-- Basic analytics APIs functional
-- Dashboard data accurate
-- Caching improving performance
-- Role-based data access working
+```bash
+# Create new migration
+cd InfertilityTreatment.Data
+dotnet ef migrations add AddPerformanceIndexes --startup-project ../InfertilityTreatment.API
+```
+
+#### **2. Add Critical Indexes**
+
+```sql
+-- File: Migration Up() method
+migrationBuilder.Sql(@"
+    -- User performance indexes
+    CREATE INDEX IX_Users_Role ON Users(Role);
+    CREATE INDEX IX_Users_Email ON Users(Email);
+
+    -- Treatment cycle indexes for analytics
+    CREATE INDEX IX_TreatmentCycles_Status_StartDate ON TreatmentCycles(Status, StartDate);
+    CREATE INDEX IX_TreatmentCycles_CustomerId_Status ON TreatmentCycles(CustomerId, Status);
+    CREATE INDEX IX_TreatmentCycles_DoctorId_Status ON TreatmentCycles(DoctorId, Status);
+
+    -- Appointment indexes for booking
+    CREATE INDEX IX_Appointments_DoctorId_ScheduledDateTime ON Appointments(DoctorId, ScheduledDateTime);
+    CREATE INDEX IX_Appointments_Status_ScheduledDateTime ON Appointments(Status, ScheduledDateTime);
+
+    -- Test result indexes for analytics
+    CREATE INDEX IX_TestResults_CycleId_TestDate ON TestResults(CycleId, TestDate);
+    CREATE INDEX IX_TestResults_TestType_Status ON TestResults(TestType, Status);
+
+    -- Review indexes for doctor statistics
+    CREATE INDEX IX_Reviews_DoctorId_IsApproved ON Reviews(DoctorId, IsApproved);
+    CREATE INDEX IX_Reviews_Rating_CreatedAt ON Reviews(Rating, CreatedAt);
+
+    -- Notification indexes
+    CREATE INDEX IX_Notifications_UserId_IsRead ON Notifications(UserId, IsRead);
+    CREATE INDEX IX_Notifications_Type_ScheduledAt ON Notifications(Type, ScheduledAt);
+");
+```
+
+#### **3. Apply Migration**
+
+```bash
+dotnet ef database update --startup-project ../InfertilityTreatment.API
+```
+
+### **Definition of Done:**
+
+- [ ] Performance indexes migration created
+- [ ] Migration applied successfully
+- [ ] Database performance improved cho common queries
+- [ ] Ready cho Week 6 analytics queries
 
 ---
 
-### Issue #BE020: System Integration & Optimization (🚧 IN PROGRESS)
+## Issue #BE-FIX005: Integration Testing & Verification
 
-**Assignee**: BE1  
+**Assignee**: BE1 + BE2  
 **Priority**: MEDIUM  
-**Story Points**: 4
+**Story Points**: 2  
+**Timeline**: 0.5 day
 
-**Description:**
-Complete system integration và basic optimizations.
+### **Description:**
 
-**Acceptance Criteria:**
+Comprehensive testing để verify all fixes working và system ready cho Week 6.
 
-- [ ] Complete all missing service integrations:
-  - TreatmentCycle ↔ Appointments
-  - Appointments ↔ TestResults
-  - TreatmentPhases ↔ Prescriptions
-  - Notifications ↔ All major events
-- [ ] Implement comprehensive event system:
-  - Appointment created → send notification
-  - Test result added → notify patient
-  - Prescription added → notify patient
-  - Cycle completed → enable reviews
-- [ ] Add validation improvements:
-  - Cross-entity validation
-  - Business rule enforcement
-  - Data consistency checks
-- [ ] Basic performance optimizations:
-  - Add database indexes cho frequently queried fields
-  - Optimize includes trong repositories
-  - Add pagination cho large datasets
-- [ ] Create comprehensive DTOs:
-  - Dashboard DTOs với aggregated data
-  - Detail DTOs với full relationships
-  - Summary DTOs cho lists
+### **Acceptance Criteria:**
 
-**Definition of Done:**
+#### **1. API Integration Testing**
 
-- All major entities properly integrated
-- Automatic notifications working
-- Performance optimized cho common operations
-- Data validation comprehensive
-- Business rules enforced
+```bash
+# Test all controllers working
+GET /api/users/profile
+GET /api/doctors
+GET /api/treatment-cycles
+GET /api/appointments
+GET /api/test-results
+GET /api/medications
+GET /api/prescriptions
+GET /api/reviews
+GET /api/notifications
+```
+
+#### **2. Service Dependency Testing**
+
+```csharp
+// Verify all services can be resolved:
+var services = serviceProvider.GetServices<IAnalyticsService>();
+var services = serviceProvider.GetServices<IPaymentService>();
+var services = serviceProvider.GetServices<IBookingService>();
+// All should resolve without errors
+```
+
+#### **3. UnitOfWork Testing**
+
+```csharp
+// Test all repositories accessible:
+using var unitOfWork = serviceProvider.GetService<IUnitOfWork>();
+var users = await unitOfWork.Users.GetAllAsync();
+var treatments = await unitOfWork.TreatmentServices.GetAllAsync();
+var phases = await unitOfWork.TreatmentPhases.GetAllAsync();
+var testResults = await unitOfWork.TestResults.GetAllAsync();
+var notifications = await unitOfWork.Notifications.GetAllAsync();
+```
+
+#### **4. Database Performance Testing**
+
+```sql
+-- Test new indexes working:
+EXPLAIN QUERY PLAN
+SELECT * FROM TreatmentCycles
+WHERE Status = 'InProgress' AND StartDate > '2024-01-01';
+-- Should use IX_TreatmentCycles_Status_StartDate
+```
+
+### **Definition of Done:**
+
+- [ ] All APIs responding correctly
+- [ ] No dependency injection errors
+- [ ] All repositories accessible through UnitOfWork
+- [ ] Database indexes improving query performance
+- [ ] System stable và ready cho Week 6 implementation
 
 ---
 
-# Week 7: Dashboard APIs & Production Ready
+## 🎯 **SUCCESS CRITERIA:**
+
+**After completing all fixes:**
+
+1. ✅ Application builds và runs without errors
+2. ✅ All Swagger endpoints accessible
+3. ✅ No dependency injection runtime errors
+4. ✅ Database queries optimized với indexes
+5. ✅ Foundation services ready cho Week 6 features
+6. ✅ System assessment rating: **8.5/10** (Ready for Week 6)
+
+---
+
+# Week 6: Payment Integration & Booking System Enhancement
 
 ## 🎯 Sprint Goals
 
-- Complete dashboard APIs cho all roles
-- Performance optimization
-- Production deployment preparation
+- Complete payment gateway integration (VNPay & Momo)
+- Implement comprehensive booking system
+- Add invoice management system
+- Finalize missing Week 5 components
 
-### Issue #BE019: Role-Based Dashboard APIs
+### Issue #BE019: Analytics & Dashboard Foundation (⚠️ IN PROGRESS)
 
 **Assignee**: BE1  
-**Priority**: High  
+**Priority**: HIGH  
 **Story Points**: 8
 
 **Description:**
-Create comprehensive dashboard APIs cho all user roles.
+Complete advanced analytics system với comprehensive dashboard data cho all user roles.
 
 **Acceptance Criteria:**
 
-- [ ] Create IDashboardService với role-based methods:
-  - GetCustomerDashboardAsync(int customerId) → CustomerDashboardDto
-  - GetDoctorDashboardAsync(int doctorId) → DoctorDashboardDto
-  - GetManagerDashboardAsync() → ManagerDashboardDto
-- [ ] Implement customer dashboard data:
-  - Current treatment cycle status
-  - Upcoming appointments (next 7 days)
-  - Recent test results summary
-  - Today's medication schedule
-  - Progress tracking metrics
-- [ ] Implement doctor dashboard data:
-  - Today's appointment list
-  - Patient caseload summary
-  - Performance metrics
-  - Pending tasks (test results to review)
-- [ ] Implement manager dashboard data:
-  - Success rates by treatment type
-  - Revenue metrics
-  - Doctor performance comparison
-  - Patient satisfaction scores
-- [ ] Create DashboardController:
+- [ ] Create AnalyticsController:
   ```csharp
-  GET /api/dashboard/customer
-  GET /api/dashboard/doctor
-  GET /api/dashboard/manager
+  GET /api/analytics/dashboard/{role}?startDate=&endDate=
+  GET /api/analytics/treatment-success-rates?serviceId=&doctorId=
+  GET /api/analytics/revenue-reports?startDate=&endDate=&serviceId=
+  GET /api/analytics/doctor-performance/{doctorId}
+  GET /api/analytics/patient-demographics
+  POST /api/analytics/export-report
   ```
-- [ ] Add data aggregation optimizations:
-  - Efficient queries cho dashboard data
-  - Caching cho frequently accessed metrics
+- [ ] Implement IAnalyticsService:
+  - GetDashboardStatsAsync(UserRole role, int userId, DateRangeDto dateRange)
+  - GetTreatmentSuccessRatesAsync(SuccessRateFilterDto filter)
+  - GetRevenueReportAsync(RevenueReportDto filter)
+  - GetDoctorPerformanceAsync(int doctorId, PerformanceFilterDto filter)
+  - ExportReportToPdfAsync/ExportReportToExcelAsync
+- [ ] Create database views cho performance:
+  ```sql
+  vw_TreatmentSuccessRates, vw_RevenueAnalytics, vw_DoctorPerformance
+  ```
+- [ ] Add export functionality (PDF/Excel) using libraries
+- [ ] Implement role-based analytics:
+  - Customer: Personal treatment progress, appointment history
+  - Doctor: Patient statistics, success rates, appointment load
+  - Manager/Admin: System-wide analytics, revenue reports
 
 **Definition of Done:**
 
-- Role-based dashboards functional và informative
-- Dashboard data accurate và up-to-date
-- Performance optimized cho fast loading
-- All user roles have appropriate dashboard
+- Dashboard APIs returning proper data cho all roles
+- Export functionality working (PDF/Excel)
+- Database views created cho performance
+- Analytics data accurate và consistent
 
 ---
 
-### Issue #BE020: Performance Optimization & Caching
+### Issue #BE020: System Integration & Optimization (⚠️ IN PROGRESS)
 
 **Assignee**: BE2  
-**Priority**: High  
+**Priority**: HIGH  
 **Story Points**: 6
 
 **Description:**
-Optimize backend performance và implement comprehensive caching strategy.
+Complete system integration, optimize performance, và finalize missing components.
 
 **Acceptance Criteria:**
 
-- [ ] Implement database query optimizations:
-  - Add proper indexing cho all foreign keys
-  - Optimize Entity Framework Include statements
-  - Remove N+1 query problems
-  - Add database query logging
-- [ ] Add response caching:
-  - Cache frequently accessed data (doctors list, treatment services)
-  - Implement cache invalidation strategies
-  - Add cache expiration policies
-- [ ] Implement pagination optimizations:
-  - Optimize large dataset queries
-  - Add count optimization cho paginated results
-- [ ] Add API performance monitoring:
-  - Response time logging
-  - Slow query detection
-  - Performance metrics collection
-- [ ] Optimize authentication:
-  - JWT token validation optimization
-  - Refresh token cleanup job
-- [ ] Add health checks:
-  - Database connectivity check
-  - External service availability check
+- [ ] Complete missing entity relationships:
+  - TreatmentCycle ↔ Payment integration
+  - Appointment ↔ Invoice linking
+  - User ↔ Payment history tracking
+- [ ] Add comprehensive database indexes:
+  ```sql
+  -- Performance indexes
+  CREATE INDEX IX_Payments_CustomerId ON Payments(CustomerId);
+  CREATE INDEX IX_Payments_Status ON Payments(Status);
+  CREATE INDEX IX_TreatmentCycles_Status_StartDate ON TreatmentCycles(Status, StartDate);
+  CREATE INDEX IX_Appointments_DoctorId_ScheduledDateTime ON Appointments(DoctorId, ScheduledDateTime);
+  ```
+- [ ] Implement caching strategy:
+  - Doctor availability caching
+  - Treatment service/package caching
+  - Analytics data caching
+- [ ] Add comprehensive logging:
+  - Payment transaction logging
+  - Booking process logging
+  - Error tracking và monitoring
+- [ ] Create health check endpoints:
+  - Database connectivity
+  - External service availability
+  - System resource monitoring
+- [ ] Optimize query performance:
+  - Reduce N+1 queries
+  - Implement lazy loading strategically
+  - Add query optimization
 
 **Definition of Done:**
 
-- API response times under 500ms for standard operations
-- Database queries optimized với proper indexing
-- Caching reducing database load
-- Health checks operational
+- All entity relationships complete
+- Performance optimized với caching
+- Comprehensive logging implemented
+- Health checks functional
+- System ready for production load
 
 ---
 
-### Issue #BE021: Production Deployment & Final Testing
+### Issue #BE021: Payment Gateway Integration (VNPay & Momo)
 
-**Assignee**: BE1 & BE2  
-**Priority**: High  
+**Assignee**: BE1  
+**Priority**: CRITICAL  
+**Story Points**: 10
+
+**Description:**
+Implement comprehensive payment gateway integration với VNPay và Momo cho treatment package payments.
+
+**Acceptance Criteria:**
+
+- [ ] Create Payment entity migration:
+  ```bash
+  dotnet ef migrations add AddPayments --startup-project API
+  ```
+- [ ] Create Payment entity:
+  ```csharp
+  Payment:
+  - Id, CustomerId FK, TreatmentCycleId FK
+  - PaymentMethod (VNPay/Momo/Cash), Amount, Currency
+  - Status (Pending/Completed/Failed/Refunded)
+  - TransactionId, PaymentGatewayResponse (JSON)
+  - CreatedAt, CompletedAt
+  ```
+- [ ] Create PaymentLogs entity cho audit trail
+- [ ] Implement IPaymentService:
+  - CreateVNPayPaymentAsync(CreatePaymentDto) → PaymentResponseDto
+  - CreateMomoPaymentAsync(CreatePaymentDto) → PaymentResponseDto
+  - HandleVNPayCallbackAsync(VNPayCallbackDto) → bool
+  - HandleMomoCallbackAsync(MomoCallbackDto) → bool
+  - GetPaymentHistoryAsync(int customerId) → PaginatedResultDto<PaymentDto>
+  - ProcessRefundAsync(RefundRequestDto) → RefundResponseDto
+  - GetPaymentStatusAsync(int paymentId) → PaymentStatusDto
+- [ ] Create PaymentController:
+  ```csharp
+  POST /api/payments/create
+  POST /api/payments/vnpay/callback
+  POST /api/payments/momo/callback
+  GET /api/payments/history/{customerId}
+  GET /api/payments/status/{paymentId}
+  POST /api/payments/refund (Admin only)
+  ```
+- [ ] Implement VNPay integration:
+  - Payment URL generation với proper hashing
+  - Callback verification với signature validation
+  - IPN (Instant Payment Notification) handling
+  - Return URL processing
+- [ ] Implement Momo integration:
+  - Payment request với proper authentication
+  - Webhook callback handling
+  - Payment status verification
+  - Error handling và retry logic
+- [ ] Add payment security measures:
+  - Request signing và verification
+  - Callback URL validation
+  - Amount tampering prevention
+  - Duplicate transaction prevention
+- [ ] Create payment configuration trong appsettings:
+  ```json
+  "PaymentGateways": {
+    "VNPay": { "TmnCode", "HashSecret", "PaymentUrl", "CallbackUrl" },
+    "Momo": { "PartnerCode", "AccessKey", "SecretKey", "Endpoint" }
+  }
+  ```
+
+**Definition of Done:**
+
+- VNPay integration working với sandbox environment
+- Momo integration functional với test credentials
+- Payment callbacks handled securely
+- Payment history tracking accurate
+- Refund processing implemented
+- Security measures in place
+
+---
+
+### Issue #BE022: Invoice Management & Generation System
+
+**Assignee**: BE2  
+**Priority**: HIGH  
+**Story Points**: 8
+
+**Description:**
+Create comprehensive invoice system với PDF generation và email delivery.
+
+**Acceptance Criteria:**
+
+- [ ] Create Invoice entities migration:
+  ```bash
+  dotnet ef migrations add AddInvoices --startup-project API
+  ```
+- [ ] Create Invoice entity:
+  ```csharp
+  Invoice:
+  - Id, InvoiceNumber (auto-generated), CustomerId FK
+  - PaymentId FK, TreatmentCycleId FK
+  - SubtotalAmount, TaxAmount, TotalAmount, Currency
+  - Status (Draft/Sent/Paid/Cancelled)
+  - IssueDate, DueDate, PaidDate, Notes
+  ```
+- [ ] Create InvoiceItems entity:
+  ```csharp
+  InvoiceItem:
+  - Id, InvoiceId FK, Description
+  - Quantity, UnitPrice, TotalPrice
+  ```
+- [ ] Implement IInvoiceService:
+  - GenerateInvoiceAsync(GenerateInvoiceDto) → InvoiceDto
+  - GenerateInvoicePdfAsync(int invoiceId) → byte[]
+  - SendInvoiceEmailAsync(int invoiceId) → bool
+  - GetCustomerInvoicesAsync(int customerId) → PaginatedResultDto<InvoiceDto>
+  - GetInvoiceByIdAsync(int invoiceId) → InvoiceDetailDto
+  - UpdateInvoiceStatusAsync(int invoiceId, InvoiceStatus status)
+- [ ] Create InvoiceController:
+  ```csharp
+  POST /api/invoices/generate
+  GET /api/invoices/{id}
+  GET /api/invoices/{id}/pdf
+  POST /api/invoices/{id}/send-email
+  GET /api/invoices/customer/{customerId}
+  PUT /api/invoices/{id}/status
+  ```
+- [ ] Implement PDF generation:
+  - Install iTextSharp hoặc equivalent library
+  - Create professional invoice template
+  - Include company branding và details
+  - Support Vietnamese currency formatting
+- [ ] Implement auto invoice number generation:
+  - Format: INV-YYYY-MM-NNNN (e.g., INV-2025-01-0001)
+  - Ensure unique numbering
+  - Handle concurrent generation
+- [ ] Add email delivery integration:
+  - HTML email template với invoice attachment
+  - Email delivery status tracking
+  - Retry mechanism cho failed deliveries
+- [ ] Create invoice business rules:
+  - Auto-generate invoice on payment completion
+  - Update invoice status on payment status changes
+  - Support partial payments và adjustments
+
+**Definition of Done:**
+
+- Invoice generation working automatically
+- PDF generation với professional template
+- Email delivery functional
+- Invoice numbering system robust
+- Customer can view và download invoices
+
+---
+
+### Issue #BE023: Enhanced Booking & Scheduling System
+
+**Assignee**: BE1  
+**Priority**: CRITICAL  
+**Story Points**: 9
+
+**Description:**
+Complete booking system với comprehensive scheduling, availability management, và conflict resolution.
+
+**Acceptance Criteria:**
+
+- [ ] Create additional booking entities:
+
+  ```csharp
+  DoctorSchedule:
+  - Id, DoctorId FK, DayOfWeek, StartTime, EndTime
+  - IsAvailable, EffectiveDate, ExpiryDate
+
+  BookingSlot:
+  - Id, DoctorId FK, SlotDateTime, Duration
+  - IsBooked, AppointmentId FK, CreatedAt
+  ```
+
+- [ ] Create migration cho new booking entities:
+  ```bash
+  dotnet ef migrations add EnhancedBookingSystem --startup-project API
+  ```
+- [ ] Implement IBookingService:
+  - BookTreatmentCycleAsync(BookTreatmentDto) → BookingResponseDto
+  - GetAvailableSlotsAsync(AvailabilityFilterDto) → List<TimeSlotDto>
+  - BookDoctorAppointmentAsync(BookAppointmentDto) → AppointmentDto
+  - RescheduleBookingAsync(int bookingId, RescheduleDto) → bool
+  - CancelBookingAsync(int bookingId, CancellationDto) → bool
+  - GetCustomerBookingsAsync(int customerId) → List<BookingDto>
+  - CheckSlotAvailabilityAsync(int doctorId, DateTime slotTime) → bool
+- [ ] Create BookingController:
+  ```csharp
+  POST /api/bookings/treatment-cycle
+  GET /api/bookings/available-slots?doctorId=&date=&serviceType=
+  POST /api/bookings/appointment
+  PUT /api/bookings/{id}/reschedule
+  DELETE /api/bookings/{id}/cancel
+  GET /api/bookings/customer/{customerId}
+  GET /api/bookings/doctor/{doctorId}
+  ```
+- [ ] Implement doctor availability system:
+  - Weekly schedule management
+  - Holiday và exception handling
+  - Real-time availability updates
+  - Block booking functionality cho doctors
+- [ ] Add comprehensive conflict detection:
+  - Prevent double booking same time slot
+  - Check doctor working hours
+  - Validate appointment duration
+  - Handle timezone considerations
+- [ ] Implement booking workflow:
+  - Treatment package selection → Doctor selection → Time slot selection → Payment → Confirmation
+  - Integration với payment system
+  - Automatic appointment creation
+  - Email confirmations
+- [ ] Add booking business rules:
+  - Minimum advance booking time (e.g., 24 hours)
+  - Maximum booking window (e.g., 3 months ahead)
+  - Cancellation policies và deadlines
+  - Rescheduling limitations
+- [ ] Create notification integration:
+  - Booking confirmations
+  - Reminder notifications
+  - Cancellation notifications
+  - Rescheduling confirmations
+
+**Definition of Done:**
+
+- Complete booking workflow functional
+- Doctor availability system working
+- Conflict detection prevents double booking
+- Integration với payment và notification systems
+- Booking rules enforced properly
+
+---
+
+### Issue #BE024: Complete Medication & Prescription System
+
+**Assignee**: BE2  
+**Priority**: MEDIUM  
 **Story Points**: 7
 
 **Description:**
-Final production preparation, security hardening, và comprehensive testing.
+Finalize medication management system với prescription tracking và monitoring.
 
 **Acceptance Criteria:**
 
-- [ ] Complete security audit:
-  - Input validation on all endpoints
-  - SQL injection prevention verification
-  - XSS protection headers
-  - HTTPS enforcement
-  - JWT security best practices
-- [ ] Create comprehensive API tests:
-  - Integration tests cho all major workflows
-  - Authentication flow testing
-  - Authorization testing cho all endpoints
-  - Error handling testing
-- [ ] Add comprehensive logging:
-  - Structured logging với Serilog
-  - Error tracking và alerting
-  - Performance metrics logging
-  - Security event logging
-- [ ] Prepare production configuration:
-  - Environment-specific appsettings
-  - Database migration scripts
-  - Docker containerization (optional)
-  - CI/CD pipeline preparation
-- [ ] Create API documentation:
-  - Complete Swagger documentation
-  - API usage examples
-  - Authentication guide
-  - Error code documentation
-- [ ] Database optimization for production:
-  - Final indexing review
-  - Database size optimization
-  - Backup strategy implementation
+- [ ] Uncomment và implement Medication & Prescription entities:
+  ```csharp
+  public DbSet<Medication> Medications { get; set; }
+  public DbSet<Prescription> Prescriptions { get; set; }
+  ```
+- [ ] Create medications migration:
+  ```bash
+  dotnet ef migrations add AddMedicationsAndPrescriptions --startup-project API
+  ```
+- [ ] Implement IMedicationService:
+  - GetAllMedicationsAsync() → List<MedicationDto>
+  - CreateMedicationAsync(CreateMedicationDto) - admin only
+  - UpdateMedicationAsync(int medicationId, UpdateMedicationDto)
+  - SearchMedicationsAsync(string searchTerm) → List<MedicationDto>
+- [ ] Implement IPrescriptionService:
+  - CreatePrescriptionAsync(CreatePrescriptionDto) → PrescriptionDto
+  - GetPrescriptionsByPhaseAsync(int phaseId) → List<PrescriptionDto>
+  - GetPatientPrescriptionsAsync(int customerId) → List<PrescriptionDto>
+  - UpdatePrescriptionAsync(int prescriptionId, UpdatePrescriptionDto)
+  - MarkPrescriptionCompleteAsync(int prescriptionId)
+- [ ] Create controllers:
+
+  ```csharp
+  MedicationsController:
+  - GET /api/medications
+  - POST /api/medications (Admin only)
+  - PUT /api/medications/{id}
+  - GET /api/medications/search?term={searchTerm}
+
+  PrescriptionsController:
+  - POST /api/prescriptions (Doctor only)
+  - GET /api/prescriptions/phase/{phaseId}
+  - GET /api/prescriptions/customer/{customerId}
+  - PUT /api/prescriptions/{id}
+  - PUT /api/prescriptions/{id}/complete
+  ```
+
+- [ ] Add prescription validation:
+  - Doctor can only prescribe for their patients
+  - Medication dosage validation
+  - Drug interaction checking (basic)
+  - Prescription duration validation
+- [ ] Implement medication tracking:
+  - Prescription adherence monitoring
+  - Side effects reporting
+  - Medication schedule notifications
+- [ ] Add medication database với common fertility drugs:
+  - Clomid, Letrozole, Gonal-F, Menopur, etc.
+  - Standard dosages và administration routes
+  - Common side effects và contraindications
 
 **Definition of Done:**
 
-- Security vulnerabilities addressed và tested
-- Integration tests covering all major scenarios
-- Comprehensive logging implemented
-- Production configuration ready
-- API documentation complete và accurate
-- Application ready for production deployment
+- Medication database populated với common drugs
+- Doctors can prescribe medications trong treatment phases
+- Patients can view their prescriptions
+- Basic validation và safety checks implemented
 
 ---
 
-## Backend Development Guidelines
+### Issue #BE025: Enhanced Email & Notification Integration
 
-### Code Standards
+**Assignee**: BE1  
+**Priority**: MEDIUM  
+**Story Points**: 6
 
-- Follow C# coding conventions và naming standards
-- Implement SOLID principles trong all services
-- Use async/await cho all database operations
-- Implement proper exception handling và logging
-- Write comprehensive unit tests cho business logic
+**Description:**
+Complete email system integration với automated notifications và templating.
 
-### Architecture Patterns
+**Acceptance Criteria:**
 
-- **4-Layer Architecture** với separate projects
-- **Repository Pattern** cho data access layer
-- **Unit of Work Pattern** cho transaction management
-- **Dependency Injection** cho all services
-- **Code-First** approach với EF Core migrations
+- [ ] Implement IEmailService completely:
+  - SendAppointmentReminderAsync(int appointmentId)
+  - SendTestResultNotificationAsync(int customerId, int testResultId)
+  - SendMedicationReminderAsync(int customerId, List<int> prescriptionIds)
+  - SendTreatmentMilestoneAsync(int cycleId, string milestone)
+  - SendInvoiceEmailAsync(int invoiceId)
+  - SendBookingConfirmationAsync(int bookingId)
+- [ ] Create email templates:
+  - HTML templates cho each notification type
+  - Professional styling với company branding
+  - Support cho Vietnamese language
+  - Responsive design cho mobile viewing
+- [ ] Implement template engine:
+  - Dynamic content insertion
+  - Personalization với customer data
+  - Conditional content based on treatment type
+- [ ] Add SMTP configuration enhancement:
+  - Support cho multiple email providers
+  - Connection pooling cho performance
+  - Retry logic cho failed sends
+  - Email delivery status tracking
+- [ ] Create notification scheduling:
+  - Background service cho scheduled notifications
+  - Appointment reminders (24h, 2h before)
+  - Medication reminders (daily schedule)
+  - Treatment milestone notifications
+- [ ] Add notification preferences:
+  - User can opt-in/opt-out của specific notifications
+  - Email vs SMS preferences
+  - Notification frequency settings
+- [ ] Implement email analytics:
+  - Delivery rates tracking
+  - Open rates monitoring
+  - Click-through tracking for links
+  - Bounce handling
 
-### Database Guidelines
+**Definition of Done:**
 
-- Use Entity Framework Core migrations cho all schema changes
-- Implement proper indexing cho performance
-- Use soft deletes (IsActive flag) instead of hard deletes
-- Store sensitive data encrypted
-- Maintain audit trails với timestamps
+- Automated email notifications working
+- Professional email templates implemented
+- Notification scheduling functional
+- User preferences respected
+- Email analytics tracking
 
-### API Design
+---
 
-- Follow RESTful conventions
-- Use proper HTTP status codes
-- Implement consistent error response format
-- Add comprehensive input validation
-- Include proper authorization checks
+## 📋 **Week 6 Summary & Integration**
 
-### Testing Strategy
+### **New Database Tables:**
 
-- Unit tests for all services and repositories
-- Integration tests for API endpoints
-- Mock external dependencies in tests
-- Test both success and failure scenarios
-- Maintain high test coverage (>80%)
+- Payments, PaymentLogs
+- Invoices, InvoiceItems
+- DoctorSchedule, BookingSlot
+- Medications, Prescriptions (if not already created)
 
-### Performance Guidelines
+### **Major API Endpoints Added:**
 
-- Implement caching for frequently accessed data
-- Use pagination for large datasets
-- Optimize database queries and avoid N+1 problems
-- Implement async operations for I/O bound tasks
-- Monitor and log performance metrics
+- `/api/payments/*` - Payment processing
+- `/api/invoices/*` - Invoice management
+- `/api/bookings/*` - Enhanced booking system
+- `/api/medications/*` - Medication management
+- `/api/prescriptions/*` - Prescription management
+
+### **External Integrations:**
+
+- VNPay payment gateway
+- Momo payment gateway
+- Enhanced email service với templates
+- PDF generation library
+
+## 📋 **Week 6 Priority Order**
+
+### **TUẦN NÀY CẦN HOÀN THÀNH:**
+
+#### **Priority 1: Complete Pending Issues (Days 1-2)**
+
+1. **#BE019: Analytics & Dashboard Foundation** (⚠️ PENDING - 8 pts)
+2. **#BE020: System Integration & Optimization** (⚠️ PENDING - 6 pts)
+
+#### **Priority 2: New Critical Features (Days 3-5)**
+
+3. **#BE021: Payment Gateway Integration** (NEW - 10 pts)
+4. **#BE023: Enhanced Booking System** (NEW - 9 pts)
+
+#### **Priority 3: Supporting Features (Days 6-7)**
+
+5. **#BE022: Invoice Management** (NEW - 8 pts)
+6. **#BE024: Medication System** (NEW - 7 pts)
+
+### **⚠️ KHUYẾN NGHỊ:**
+
+**ĐẦU TIÊN:** Close #BE019 và #BE020 trước khi start issues mới  
+**LÝ DO:** Payment system cần Analytics data và System Integration hoàn chỉnh
+
+### **Week 6 Goals Achievement:**
+
+- ✅ Complete payment processing end-to-end
+- ✅ Professional invoice system
+- ✅ Comprehensive booking workflow
+- ✅ Complete medication management
+- ✅ Enhanced notification system
+
+### **Preparation for Week 7:**
+
+- System optimization và performance tuning
+- Advanced reporting và analytics
+- Mobile API enhancements
+- Production deployment preparation
