@@ -6,6 +6,156 @@ Hoàn thiện các API endpoints còn thiếu và tối ưu hóa business logic 
 
 ---
 
+## **DAY 0 - Fix các phần**
+
+### **Issue #BE-FIX006: CRITICAL VALIDATION FIXES REQUIRED**
+
+#### **Task #1: Missing Entity Validation in TreatmentCycle Creation**
+
+**File Affected:** `InfertilityTreatment.Business/Services/CycleService.cs`
+
+**Problem Description:**
+
+- `CreateCycleAsync()` method không validate existence của Customer, Doctor, và Package
+- Có thể tạo TreatmentCycle với invalid foreign keys
+- Dẫn đến data corruption và runtime errors
+
+**Required Actions:**
+
+- [ ] Add validation check Customer exists và IsActive = true
+- [ ] Add validation check Doctor exists, IsAvailable = true, và IsActive = true
+- [ ] Add validation check Package exists và IsActive = true
+- [ ] Implement proper error handling với meaningful error messages
+- [ ] Add transaction support để ensure data consistency
+
+---
+
+#### **Task #2: CycleNumber Duplication Problem**
+
+**File Affected:** `InfertilityTreatment.Entity/DTOs/TreatmentCycles/CreateCycleDto.cs`
+
+**Problem Description:**
+
+- CycleNumber có thể trùng lặp cho cùng một Customer
+- Không có unique constraint hoặc validation logic
+- Gây confusion trong business logic và reporting
+
+**Required Actions:**
+
+- [ ] Add validation check CycleNumber uniqueness per Customer
+- [ ] Create repository method `GetCycleByCustomerAndNumberAsync()`
+- [ ] Implement proper error handling cho duplicate scenarios
+- [ ] Consider database constraint nếu cần thiết
+
+---
+
+#### **Task #3: Date Logic Validation Missing**
+
+**File Affected:** `InfertilityTreatment.Entity/DTOs/TreatmentCycles/CreateCycleDto.cs`
+
+**Problem Description:**
+
+- Không validate date logic (StartDate < ExpectedEndDate < ActualEndDate)
+- Có thể tạo cycles với invalid date combinations
+- Business logic sẽ broken nếu dates không hợp lý
+
+**Required Actions:**
+
+- [ ] Add validation: StartDate < ExpectedEndDate (nếu cả hai có value)
+- [ ] Add validation: ActualEndDate > StartDate (nếu có value)
+- [ ] Add validation: ExpectedEndDate trong tương lai reasonable
+- [ ] Prevent dates in far past hoặc unrealistic future
+
+---
+
+#### **Task #4: TreatmentPhase Status Using String Instead of Enum**
+
+**File Affected:** `InfertilityTreatment.Entity/Entities/TreatmentPhase.cs`
+
+**Problem Description:**
+
+- Status field sử dụng string, cho phép any arbitrary values
+- Không có data consistency và type safety
+- Gây khó khăn trong querying và business logic
+
+**Required Actions:**
+
+- [ ] Create `PhaseStatus` enum với proper values (Pending, InProgress, Completed, Cancelled, OnHold)
+- [ ] Update TreatmentPhase entity để use enum
+- [ ] Update tất cả related DTOs (CreatePhaseDto, UpdatePhaseDto, PhaseResponseDto)
+- [ ] Create database migration để convert existing string data
+- [ ] Update business logic để handle enum properly
+
+---
+
+### **Issue #BE-FIX007: MISSING FEATURES IMPLEMENTATION**
+
+#### **Task #1: Missing Medications Controller**
+
+**Status:** Business logic exists but no API endpoints
+
+**Problem Description:**
+
+- `IMedicationService` và `MedicationService` đã implemented
+- Không có `MedicationsController` để expose APIs
+- Frontend không thể interact với medication data
+
+**Required Actions:**
+
+- [ ] Create `MedicationsController.cs` với full CRUD operations
+- [ ] Implement GET `/api/medications` (with filtering)
+- [ ] Implement GET `/api/medications/{id}`
+- [ ] Implement POST `/api/medications` (Doctor/Admin only)
+- [ ] Implement PUT `/api/medications/{id}` (Doctor/Admin only)
+- [ ] Implement GET `/api/medications/search` functionality
+- [ ] Add proper authorization và error handling
+- [ ] Create required DTOs (CreateMedicationDto, UpdateMedicationDto, MedicationFilterDto)
+
+---
+
+#### **Task #2: Missing Prescriptions Controller**
+
+**Status:** Business logic exists but no API endpoints
+
+**Problem Description:**
+
+- `IPrescriptionService` và `PrescriptionService` đã implemented
+- Không có `PrescriptionsController` để expose APIs
+- Treatment workflow bị incomplete without prescription management
+
+**Required Actions:**
+
+- [ ] Create `PrescriptionsController.cs` với full workflow support
+- [ ] Implement POST `/api/prescriptions/phase/{phaseId}` (Doctor only)
+- [ ] Implement GET `/api/prescriptions/phase/{phaseId}`
+- [ ] Implement GET `/api/prescriptions/{id}`
+- [ ] Implement GET `/api/prescriptions/customer/{customerId}/active`
+- [ ] Implement PUT `/api/prescriptions/{id}` (Doctor only)
+- [ ] Implement POST `/api/prescriptions/{id}/dose-taken` (Customer only)
+- [ ] Add proper role-based authorization
+- [ ] Create required DTOs (CreatePrescriptionDto, UpdatePrescriptionDto, RecordDoseDto)
+
+---
+
+## 🗂️ **ADDITIONAL DTOs REQUIRED**
+
+### **For Medications:**
+
+- [ ] `CreateMedicationDto` - for creating new medications
+- [ ] `UpdateMedicationDto` - for updating medication info
+- [ ] `MedicationDetailDto` - for detailed medication response
+- [ ] `MedicationFilterDto` - for filtering medications list
+
+### **For Prescriptions:**
+
+- [ ] `CreatePrescriptionDto` - for doctor prescribing medications
+- [ ] `UpdatePrescriptionDto` - for modifying prescriptions
+- [ ] `PrescriptionDetailDto` - for detailed prescription info
+- [ ] `RecordDoseDto` - for patients recording dose intake
+- [ ] `PrescriptionSummaryDto` - for listing prescriptions
+
+---
+
 ## 🔴 **DAY 1 - HIGH PRIORITY (Core Treatment APIs)**
 
 ### **Issue #BE-001: Hoàn thiện Treatment Phase Management APIs**
