@@ -158,7 +158,7 @@ Hoàn thiện các API endpoints còn thiếu và tối ưu hóa business logic 
 
 ## 🔴 **DAY 1 - HIGH PRIORITY (Core Treatment APIs)**
 
-### **Issue #BE-001: Hoàn thiện Treatment Phase Management APIs**
+### **Issue #BE-022: Complete Treatment Phase Management APIs**
 
 **Priority:** 🔴 Critical
 **Estimated Time:** 4 hours
@@ -222,7 +222,7 @@ public interface ICycleService
 
 ---
 
-### **Issue #BE-002: Tạo Missing Controllers cho Prescription & Medication**
+### **Issue #BE-023: Tạo Missing Controllers cho Prescription & Medication**
 
 **Priority:** 🔴 Critical  
 **Estimated Time:** 3 hours
@@ -314,7 +314,7 @@ public class PrescriptionSummaryDto
 
 ---
 
-### **Issue #BE-003: Enhance Cycle Initialization APIs**
+### **Issue #BE-024: Enhance Cycle Initialization APIs**
 
 **Priority:** 🔴 Critical
 **Estimated Time:** 2 hours  
@@ -393,7 +393,7 @@ public class CycleTimelineDto
 
 ## 🟡 **DAY 2 - MEDIUM PRIORITY (Enhanced Features)**
 
-### **Issue #BE-004: Implement Real-time Notifications với SignalR**
+### **Issue #BE-025: Implement Real-time Notifications với SignalR**
 
 **Priority:** 🟡 Medium
 **Estimated Time:** 5 hours
@@ -489,7 +489,7 @@ public async Task<IActionResult> GetRealTimeNotificationStatus(int userId)
 
 ---
 
-### **Issue #BE-005: Advanced Appointment Features**
+### **Issue #BE-026: Advanced Appointment Features**
 
 **Priority:** 🟡 Medium
 **Estimated Time:** 4 hours
@@ -579,7 +579,7 @@ public class AutoScheduleDto
 
 ## 🟢 **DAY 3 - OPTIMIZATION & ENHANCEMENT**
 
-### **Issue #BE-006: Advanced Analytics & Reporting APIs**
+### **Issue #BE-027: Advanced Analytics & Reporting APIs**
 
 **Priority:** 🟢 Low
 **Estimated Time:** 4 hours
@@ -656,7 +656,7 @@ public class EfficiencyMetrics
 
 ---
 
-### **Issue #BE-007: Implement Email Integration**
+### **Issue #BE-028: Implement Email Integration**
 
 **Priority:** 🟢 Low
 **Estimated Time:** 3 hours
@@ -735,7 +735,7 @@ public async Task<IActionResult> SendBulkNotification([FromBody] BulkEmailDto dt
 
 ## 🔵 **DAY 4-5 - TESTING & OPTIMIZATION**
 
-### **Issue #BE-008: Comprehensive API Testing**
+### **Issue #BE-029: Comprehensive API Testing**
 
 **Priority:** 🔵 Testing
 **Estimated Time:** 8 hours (2 days)
@@ -801,7 +801,7 @@ public async Task CompleteIVFTreatmentWorkflow_ShouldSucceed()
 
 ---
 
-### **Issue #BE-009: Performance Optimization**
+### **Issue #BE-030: Performance Optimization**
 
 **Priority:** 🔵 Optimization
 **Estimated Time:** 4 hours
@@ -871,7 +871,7 @@ public class CacheService : ICacheService
 
 ## 🟣 **DAY 6-7 - FINAL INTEGRATION & DEPLOYMENT PREP**
 
-### **Issue #BE-010: API Documentation & Validation**
+### **Issue #BE-031: API Documentation & Validation**
 
 **Priority:** 🟣 Documentation
 **Estimated Time:** 4 hours
@@ -942,7 +942,7 @@ public async Task<IActionResult> CreateCycle([FromBody] CreateCycleDto createCyc
 
 ---
 
-### **Issue #BE-011: Environment Configuration & Deployment Prep**
+### **Issue #BE-032: Environment Configuration & Deployment Prep**
 
 **Priority:** 🟣 Deployment
 **Estimated Time:** 4 hours
