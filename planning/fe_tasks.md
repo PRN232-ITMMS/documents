@@ -1,45 +1,47 @@
-# Frontend Tasks - 1 Week Implementation Plan
+# Frontend Tasks - 1 Week Implementation Plan (REVISED)
 
 ## 📋 Tổng quan
 
-Frontend development plan **1 tuần** tập trung vào **API-driven implementation** với những features có Backend APIs đã hoàn thành 100%. Ưu tiên business impact cao và user experience.
+Frontend development plan **1 tuần** được điều chỉnh dựa trên **guide.md APIs** để đảm bảo 100% khả thi và đúng main flow business.
 
 ---
 
-## 🎯 **API READINESS STATUS**
+## 🎯 **API READINESS STATUS (UPDATED)**
 
-### **✅ APIs SẴN SÀNG (Có thể implement ngay):**
+### **✅ APIs SẴN SÀNG (100% Ready từ guide.md):**
 
-- **Authentication & Users** ✅ - AuthController, UserController, CustomersController
-- **Treatment Services & Packages** ✅ - TreatmentServiceController, TreatmentPackageController
-- **Treatment Cycles** ✅ - TreatmentCyclesController (90% APIs)
-- **Appointments** ✅ - AppointmentsController (Full CRUD)
-- **Test Results** ✅ - TestResultController (Complete)
-- **Payments** ✅ - PaymentsController (VNPay ready)
-- **Reviews** ✅ - ReviewsController (Complete)
-- **Analytics** ✅ - AnalyticsController (Dashboard ready)
+- **Authentication & Users** ✅ - `/api/auth/*`
+- **Treatment Services & Packages** ✅ - `/api/treatment-services`, `/api/treatment-packages`
+- **Doctors** ✅ - `/api/doctors`, `/api/doctors/{id}/availability`
+- **Treatment Cycles** ✅ - `/api/treatment-cycles/*`
+- **Treatment Phases** ✅ - `/api/treatment-phases`, `/api/treatment-cycles/{id}/initialize`
+- **Appointments** ✅ - `/api/appointments/*`, dual availability APIs
+- **Test Results** ✅ - `/api/test-results/*`
+- **Prescriptions** ✅ - `/api/prescriptions/*`, `/api/medications`
+- **Payments** ✅ - `/api/payments/*` (VNPay)
+- **Reviews** ✅ - `/api/reviews`
+- **Analytics** ✅ - `/api/analytics/*`
 
-### **❌ APIs CHƯA SẴN SÀNG (Skip trong tuần này):**
+### **❌ KHÔNG CÓ APIS (Skip features):**
 
-- **Medications & Prescriptions** ❌ - Controllers missing
-- **Real-time Notifications** ❌ - SignalR Hub chưa có
-- **Advanced Phase Management** ❌ - Some APIs missing
+- **Real-time SignalR** ❌ - Use polling thay thế
+- **Advanced Notifications** ❌ - Basic notification UI only
 
 ---
 
-## 🗓️ **1-WEEK TIMELINE BREAKDOWN**
+## 🗓️ **1-WEEK TIMELINE BREAKDOWN (REVISED)**
 
-### **DAY 1-2: HIGH-IMPACT QUICK WINS (16h)**
+### **DAY 1: SERVICE DISCOVERY & PACKAGE SELECTION**
 
-#### **Task #FE-007: Service Browser & Package Comparison**
+#### **Task #FE-007: Complete Service Catalog**
 
 **Priority:** 🔴 Critical  
-**Time:** 8 hours (Day 1)
+**Time:** 8 hours
 **API Status:** ✅ 100% Ready
 
 **Backend APIs:**
 
-```
+```json
 ✅ GET /api/treatment-services
 ✅ GET /api/treatment-services/{id}
 ✅ GET /api/treatment-packages
@@ -50,94 +52,104 @@ Frontend development plan **1 tuần** tập trung vào **API-driven implementat
 **Implementation:**
 
 ```typescript
-// Day 1 Morning (4h): Core Structure
+// Day 1 Morning (4h): Service Browser
 /src/pages/services/
 ├── ServicesBrowser.tsx          // Main catalog page
 ├── ServiceDetail.tsx            // Service detail view
-└── PackageComparison.tsx        // Package comparison
+└── PackageComparison.tsx        // Package comparison table
 
 /src/components/services/
 ├── ServiceCard.tsx              // Service display card
-├── PackageCard.tsx              // Package card with pricing
-├── ServiceFilters.tsx           // Filter controls
-└── PriceComparison.tsx          // Comparison table
+├── PackageCard.tsx              // Package pricing card
+├── ServiceFilters.tsx           // Filter by type/price
+└── PriceCalculator.tsx          // Cost estimation
 
-// Day 1 Afternoon (4h): Business Logic
-- Service catalog with search/filter
-- Package comparison table
-- Price calculator
-- Add to cart functionality
+// Day 1 Afternoon (4h): Package Selection
+├── PackageSelector.tsx          // Multi-package selection
+├── PackageComparison.tsx        // Side-by-side comparison
+├── ServiceRecommendation.tsx    // Based on user profile
+└── AddToCartFlow.tsx            // Selection confirmation
 ```
 
-**Role-based Features:**
+**Features by Role:**
 
-- **Customer:** Browse, compare, select packages
-- **Doctor:** View for recommendations
-- **Manager/Admin:** Full management interface
+- **Customer:** Browse services, compare packages, view pricing
+- **Doctor:** View for recommendation purposes
+- **Manager/Admin:** Service management interface
 
 ---
 
-#### **Task #FE-008: Treatment Cycle Dashboard**
+### **DAY 2: TREATMENT CYCLE + PHASE MANAGEMENT**
+
+#### **Task #FE-008: Complete Treatment Cycle System**
 
 **Priority:** 🔴 Critical
-**Time:** 8 hours (Day 2)
-**API Status:** ✅ 90% Ready
+**Time:** 8 hours
+**API Status:** ✅ 100% Ready
 
 **Backend APIs:**
 
-```
+```json
 ✅ GET /api/treatment-cycles (role-based filtering)
 ✅ GET /api/treatment-cycles/{id}
 ✅ POST /api/treatment-cycles
 ✅ PUT /api/treatment-cycles/{id}
+✅ POST /api/treatment-cycles/{id}/initialize    // Auto-generate phases
+✅ POST /api/treatment-phases                    // Manual phases
 ✅ GET /api/treatment-cycles/{id}/phases
+✅ PUT /api/treatment-cycles/{id}/status         // Update status
 ```
 
 **Implementation:**
 
 ```typescript
-// Day 2 Morning (4h): Customer View
+// Day 2 Morning (4h): Core Cycle Management
 /src/pages/cycles/
-├── MyTreatmentCycles.tsx        // Customer cycle list
-├── TreatmentCycleDetail.tsx     // Cycle detail view
-└── CycleProgress.tsx            // Progress tracking
+├── TreatmentCycles.tsx          // Cycle listing (role-based)
+├── CycleDetail.tsx              // Detailed cycle view
+├── CreateCycle.tsx              // Create new cycle (Doctor/Manager)
+└── CycleTimeline.tsx            // Progress visualization
 
-// Day 2 Afternoon (4h): Doctor/Manager Views
-├── DoctorCycles.tsx             // Doctor cycle management
-├── CreateCycle.tsx              // Create new cycle
-└── CycleAnalytics.tsx           // Manager analytics
+// Day 2 Afternoon (4h): Phase Management
+├── CycleInitialization.tsx      // Auto-generate phases
+├── PhaseManagement.tsx          // Manual phase creation/edit
+├── PhaseTracking.tsx            // Phase progress tracking
+└── CycleStatusUpdate.tsx        // Update cycle status
 
 /src/components/cycles/
-├── CustomerCycleCard.tsx        // Patient-focused view
-├── DoctorCycleCard.tsx          // Medical management view
-├── CycleTimeline.tsx            // Progress visualization
-└── CycleActions.tsx             // Role-based actions
+├── CycleCard.tsx                // Cycle summary card
+├── PhaseCard.tsx                // Individual phase display
+├── CycleProgress.tsx            // Progress bar/timeline
+├── PhaseWizard.tsx              // Manual phase creation
+└── StatusUpdateModal.tsx        // Cycle completion
 ```
 
-**Role-specific Features:**
+**Main Flow Integration:**
 
-- **Customer:** View progress, next appointments, costs
-- **Doctor:** Create cycles, manage phases, assign treatments
-- **Manager:** Analytics, resource allocation, performance
+- **Flow 2.1:** Create Treatment Cycle
+- **Flow 2.2.1:** Manual phase creation
+- **Flow 2.2.2:** Auto-initialization with phases
+- **Flow 6.1:** Update cycle status to "Completed"
 
 ---
 
-### **DAY 3-4: USER ENGAGEMENT FEATURES (16h)**
+### **DAY 3: COMPLETE APPOINTMENT SYSTEM**
 
-#### **Task #FE-009: Complete Appointment System**
+#### **Task #FE-009: End-to-End Appointment Management**
 
 **Priority:** 🔴 Critical
-**Time:** 8 hours (Day 3)
+**Time:** 8 hours
 **API Status:** ✅ 100% Ready
 
 **Backend APIs:**
 
-```
+```json
+✅ GET /api/doctors/{id}/availability?date=YYYY-MM-DD           // Single date
+✅ GET /api/appointments/availability?doctorId=X&startDate=X    // Date range
 ✅ POST /api/appointments
 ✅ GET /api/appointments (role-based)
 ✅ PUT /api/appointments/{id}/reschedule
 ✅ PUT /api/appointments/{id}/cancel
-✅ GET /api/doctors/{id}/availability
 ```
 
 **Implementation:**
@@ -146,40 +158,42 @@ Frontend development plan **1 tuần** tập trung vào **API-driven implementat
 // Day 3 Morning (4h): Booking Flow
 /src/pages/appointments/
 ├── AppointmentBooking.tsx       // Multi-step booking wizard
-├── MyAppointments.tsx           // Customer appointments
-└── AppointmentCalendar.tsx      // Calendar view
+├── DoctorSelection.tsx          // Choose doctor with availability
+├── TimeSlotPicker.tsx           // Available slots picker
+└── BookingConfirmation.tsx      // Confirm appointment details
 
-// Day 3 Afternoon (4h): Management
+// Day 3 Afternoon (4h): Management & Calendar
+├── MyAppointments.tsx           // Customer appointments
 ├── DoctorSchedule.tsx           // Doctor schedule management
-└── AppointmentManagement.tsx    // Manager view
+├── AppointmentCalendar.tsx      // Calendar view (all roles)
+└── AppointmentManagement.tsx    // Manager overview
 
 /src/components/appointments/
-├── BookingWizard.tsx            // Step-by-step booking
-├── DoctorSelector.tsx           // Doctor selection
-├── TimeSlotPicker.tsx           // Available time slots
+├── AvailabilityChecker.tsx      // Dual API availability check
 ├── AppointmentCard.tsx          // Appointment display
-└── RescheduleModal.tsx          // Reschedule interface
+├── CalendarWidget.tsx           // Calendar component
+├── RescheduleModal.tsx          // Reschedule interface
+└── BookingWizard.tsx            // Step-by-step booking
 ```
 
-**Booking Flow:**
+**Main Flow Integration:**
 
-```
-Customer: Select Service → Choose Doctor → Pick Time → Confirm
-Doctor: View Schedule → Confirm/Cancel → Add Notes
-Manager: View All → Manage Conflicts → Analytics
-```
+- **Flow 3.1:** Check doctor availability (both methods)
+- **Flow 3.2:** Book appointment with all details
 
 ---
 
-#### **Task #FE-010: Test Results Visualization**
+### **DAY 4: TEST RESULTS VISUALIZATION**
+
+#### **Task #FE-010: Medical Data & Test Results**
 
 **Priority:** 🟡 Medium
-**Time:** 8 hours (Day 4)
+**Time:** 8 hours
 **API Status:** ✅ 100% Ready
 
 **Backend APIs:**
 
-```
+```json
 ✅ GET /api/test-results (with filters)
 ✅ GET /api/test-results/{id}
 ✅ POST /api/test-results (Doctor only)
@@ -189,40 +203,40 @@ Manager: View All → Manage Conflicts → Analytics
 **Implementation:**
 
 ```typescript
-// Day 4 Morning (4h): Visualization
+// Day 4 Morning (4h): Test Results Display
 /src/pages/medical/
-├── TestResults.tsx              // Results listing
-├── TestResultDetail.tsx         // Single result view
-└── HealthTimeline.tsx           // Timeline view
+├── TestResults.tsx              // Results listing with filters
+├── TestResultDetail.tsx         // Individual result view
+├── AddTestResult.tsx            // Doctor input form
+└── MedicalHistory.tsx           // Patient medical timeline
 
-// Day 4 Afternoon (4h): Charts & Analytics
+// Day 4 Afternoon (4h): Charts & Visualization
 /src/components/medical/
 ├── TestResultsChart.tsx         // Trend charts (recharts)
-├── HealthMetrics.tsx            // Key indicators
-├── TrendAnalysis.tsx            // Progress trends
-├── NormalRangeIndicator.tsx     // Visual ranges
-└── ResultsTimeline.tsx          // Chronological view
+├── ResultsTable.tsx             // Tabular data display
+├── NormalRangeIndicator.tsx     // Visual reference ranges
+├── TrendAnalysis.tsx            // Progress over time
+└── MedicalTimeline.tsx          // Chronological view
 ```
 
-**Role-specific Views:**
+**Main Flow Integration:**
 
-- **Customer:** Simple, easy-to-understand charts
-- **Doctor:** Detailed medical data with references
-- **Manager:** Aggregated analytics
+- **Flow 4.1:** Record test results (Doctor workflow)
+- **Flow G:** Conduct tests (Patient view results)
 
 ---
 
-### **DAY 5-6: BUSINESS CRITICAL FEATURES (16h)**
+### **DAY 5: PAYMENT INTEGRATION**
 
-#### **Task #FE-011: Payment Integration UI**
+#### **Task #FE-011: Payment Integration**
 
 **Priority:** 🟡 Medium
-**Time:** 8 hours (Day 5)
-**API Status:** ✅ 100% Ready (VNPay implemented)
+**Time:** 8 hours
+**API Status:** ✅ 100% Ready
 
 **Backend APIs:**
 
-```
+```json
 ✅ POST /api/payments/create (VNPay)
 ✅ GET /api/payments/history/{customerId}
 ✅ GET /api/payments/status/{paymentId}
@@ -236,39 +250,45 @@ Manager: View All → Manage Conflicts → Analytics
 // Day 5 Morning (4h): Payment Flow
 /src/pages/payments/
 ├── PaymentCheckout.tsx          // Checkout process
-├── PaymentHistory.tsx           // Customer history
-├── PaymentSuccess.tsx           // Success page
-└── PaymentManagement.tsx        // Admin management
+├── VNPayGateway.tsx             // Gateway integration
+├── PaymentSuccess.tsx           // Success confirmation
+└── PaymentFailed.tsx            // Error handling
 
-// Day 5 Afternoon (4h): Components
+// Day 5 Afternoon (4h): Payment Management
+├── PaymentHistory.tsx           // Customer payment history
+├── PaymentManagement.tsx        // Admin payment oversight
+├── InvoiceGeneration.tsx        // PDF invoice creation
+└── RefundProcess.tsx            // Admin refund interface
+
 /src/components/payments/
-├── PaymentMethodSelector.tsx    // VNPay/Bank selection
+├── PaymentMethodSelector.tsx    // VNPay selection
 ├── PaymentSummary.tsx           // Order breakdown
-├── VNPayIntegration.tsx         // Gateway integration
-├── PaymentStatus.tsx            // Status tracking
-├── InvoiceGenerator.tsx         // PDF receipts
-└── RefundInterface.tsx          // Admin refunds
+├── PaymentStatus.tsx            // Real-time status
+├── InvoiceTemplate.tsx          // PDF template
+└── RefundModal.tsx              // Refund interface
 ```
 
-**Payment Features:**
+**Features:**
 
 - VNPay gateway integration
-- Real-time payment status
-- Payment history with filters
-- Invoice generation
+- Real-time payment status tracking
+- PDF invoice generation
 - Admin refund processing
+- Payment history with search/filter
 
 ---
 
-#### **Task #FE-012: Analytics & Reporting Dashboard**
+### **DAY 6: ANALYTICS & REPORTING DASHBOARD (8h)**
+
+#### **Task #FE-012: Business Intelligence Dashboard**
 
 **Priority:** 🟡 Medium
-**Time:** 8 hours (Day 6)
+**Time:** 8 hours
 **API Status:** ✅ 80% Ready
 
 **Backend APIs:**
 
-```
+```json
 ✅ GET /api/analytics/dashboard-stats
 ✅ GET /api/analytics/revenue
 ✅ GET /api/analytics/success-rates
@@ -282,140 +302,170 @@ Manager: View All → Manage Conflicts → Analytics
 // Day 6 Morning (4h): Role-based Dashboards
 /src/pages/analytics/
 ├── CustomerDashboard.tsx        // Personal health metrics
-├── DoctorDashboard.tsx          // Clinical performance
+├── DoctorDashboard.tsx          // Clinical performance metrics
 ├── ManagerDashboard.tsx         // Business intelligence
-└── ReportGenerator.tsx          // Export functionality
+└── ReportsGeneration.tsx        // Export functionality
 
-// Day 6 Afternoon (4h): Visualization Components
+// Day 6 Afternoon (4h): Advanced Visualization
 /src/components/analytics/
-├── MetricsCard.tsx              // KPI cards
-├── TreatmentProgressChart.tsx   // Progress tracking
-├── RevenueChart.tsx             // Financial charts
-├── SuccessRateMetrics.tsx       // Success statistics
-├── PatientDemographics.tsx      // Demographics charts
-└── PerformanceMetrics.tsx       // Performance tracking
+├── MetricsCard.tsx              // KPI display cards
+├── RevenueChart.tsx             // Financial performance charts
+├── SuccessRateMetrics.tsx       // Treatment success statistics
+├── PatientDemographics.tsx      // Demographics breakdown
+├── PerformanceMetrics.tsx       // Doctor performance tracking
+└── ExportInterface.tsx          // Report export tools
 ```
 
 **Dashboard Features by Role:**
 
-- **Customer:** Personal progress, health trends
-- **Doctor:** Patient outcomes, performance metrics
-- **Manager:** Revenue, operations, resource utilization
+- **Customer:** Personal treatment progress, health trends, appointment history
+- **Doctor:** Patient outcomes, appointment schedule, success rates
+- **Manager:** Revenue analytics, resource utilization, system performance
 
 ---
 
-### **DAY 7: POLISH & ADDITIONAL FEATURES (8h)**
+### **DAY 7: PRESCRIPTION MANAGEMENT + REVIEWS (8h)**
 
-#### **Task #FE-013: Review System & Notifications**
+#### **Task #FE-013: Prescription System & User Feedback**
 
 **Priority:** 🟢 Low
-**Time:** 8 hours (Day 7)
+**Time:** 8 hours
 **API Status:** ✅ 100% Ready
 
-**Reviews Implementation (4h):**
+**Backend APIs:**
+
+```json
+✅ POST /api/prescriptions/phase/{id}           // Create prescription
+✅ GET /api/prescriptions/customer/{id}/active   // Active prescriptions
+✅ GET /api/medications                          // Medication catalog
+✅ POST /api/reviews                             // Create review
+✅ GET /api/reviews                              // Get reviews
+```
+
+**Implementation:**
 
 ```typescript
-/src/components/reviews/
-├── ReviewForm.tsx               // Submit reviews
-├── ReviewCard.tsx               // Display reviews
+// Day 7 Morning (4h): Prescription Management
+/src/pages/prescriptions/
+├── PrescriptionManagement.tsx   // Doctor prescribing interface
+├── ActivePrescriptions.tsx      // Patient medication tracking
+├── MedicationCatalog.tsx        // Available medications
+└── MedicationMonitoring.tsx     // Usage tracking
+
+// Day 7 Afternoon (4h): Reviews & Polish
+/src/pages/reviews/
+├── ReviewSystem.tsx             // Submit reviews
+├── ReviewDisplay.tsx            // Display reviews
+├── ReviewModeration.tsx         // Admin moderation
+└── ReviewStatistics.tsx         // Review analytics
+
+/src/components/prescriptions/
+├── PrescriptionForm.tsx         // Doctor prescription form
+├── MedicationCard.tsx           // Medication display
+├── DosageTracker.tsx            // Patient usage tracking
+├── ReviewForm.tsx               // Review submission
 ├── RatingStars.tsx              // Star rating component
-├── ReviewStats.tsx              // Statistics
-└── ReviewModeration.tsx         // Admin moderation
+└── ReviewCard.tsx               // Review display card
 ```
 
-**Notifications Implementation (4h):**
+**Main Flow Integration:**
 
-```typescript
-/src/components/notifications/
-├── NotificationCenter.tsx       // Notification panel
-├── NotificationItem.tsx         // Single notification
-├── NotificationBadge.tsx        // Count indicator
-└── NotificationSettings.tsx     // User preferences
-```
+- **Flow 4.2:** Create prescription (Doctor)
+- **Flow 5.1:** Monitor medication usage (Patient)
+- **Flow 6.2:** Write reviews (Patient)
 
 ---
 
-## 🎯 **ROLE-BASED FEATURE MATRIX**
+## 🎯 **ROLE-BASED FEATURE MATRIX (UPDATED)**
 
-### **Customer Features:**
+### **Customer Journey:**
 
-| Feature                 | Status | Day |
-| ----------------------- | ------ | --- |
-| Browse Services         | ✅     | 1   |
-| View Treatment Progress | ✅     | 2   |
-| Book Appointments       | ✅     | 3   |
-| View Test Results       | ✅     | 4   |
-| Make Payments           | ✅     | 5   |
-| Personal Analytics      | ✅     | 6   |
-| Submit Reviews          | ✅     | 7   |
+| Day | Feature                 | Customer Use Case                      |
+| --- | ----------------------- | -------------------------------------- |
+| 1   | Service Browser         | Browse and select treatment packages   |
+| 2   | Treatment Cycles        | View treatment progress and timeline   |
+| 3   | Appointments            | Book appointments with doctors         |
+| 4   | Test Results            | View test results and health trends    |
+| 5   | Payments                | Make payments and view payment history |
+| 6   | Analytics               | Personal health dashboard              |
+| 7   | Prescriptions & Reviews | Track medications, submit reviews      |
 
-### **Doctor Features:**
+### **Doctor Workflow:**
 
-| Feature                 | Status | Day |
-| ----------------------- | ------ | --- |
-| Recommend Services      | ✅     | 1   |
-| Manage Treatment Cycles | ✅     | 2   |
-| Schedule Management     | ✅     | 3   |
-| Add Test Results        | ✅     | 4   |
-| View Payments           | ✅     | 5   |
-| Performance Analytics   | ✅     | 6   |
-| View Reviews            | ✅     | 7   |
+| Day | Feature                 | Doctor Use Case                          |
+| --- | ----------------------- | ---------------------------------------- |
+| 1   | Service Browser         | Recommend appropriate treatments         |
+| 2   | Treatment Cycles        | Create/manage patient treatment cycles   |
+| 3   | Appointments            | Manage schedule and patient appointments |
+| 4   | Test Results            | Record and analyze test results          |
+| 5   | Payments                | View payment status for treatments       |
+| 6   | Analytics               | Performance metrics and patient outcomes |
+| 7   | Prescriptions & Reviews | Prescribe medications, view feedback     |
 
 ### **Manager/Admin Features:**
 
-| Feature                | Status | Day |
-| ---------------------- | ------ | --- |
-| Service Management     | ✅     | 1   |
-| Cycle Analytics        | ✅     | 2   |
-| Appointment Management | ✅     | 3   |
-| Medical Reports        | ✅     | 4   |
-| Financial Management   | ✅     | 5   |
-| Business Intelligence  | ✅     | 6   |
-| Review Moderation      | ✅     | 7   |
+| Day | Feature                 | Manager Use Case                         |
+| --- | ----------------------- | ---------------------------------------- |
+| 1   | Service Browser         | Manage service catalog and pricing       |
+| 2   | Treatment Cycles        | Oversee all treatment cycles             |
+| 3   | Appointments            | Manage facility scheduling               |
+| 4   | Test Results            | System-wide test result analytics        |
+| 5   | Payments                | Financial management and reporting       |
+| 6   | Analytics               | Business intelligence dashboard          |
+| 7   | Prescriptions & Reviews | Moderate reviews, prescription oversight |
 
 ---
 
-## 🚀 **IMPLEMENTATION GUIDELINES**
+## 🚀 **IMPLEMENTATION GUIDELINES (UPDATED)**
 
-### **Daily Development Flow:**
-
-**Morning (4h):** Core functionality implementation
-**Afternoon (4h):** UI polish, testing, integration
-
-### **Code Organization:**
-
-```
-src/
-├── pages/                       # Route components by feature
-│   ├── services/               # Service browser
-│   ├── cycles/                 # Treatment cycles
-│   ├── appointments/           # Appointments
-│   ├── medical/                # Test results
-│   ├── payments/               # Payments
-│   └── analytics/              # Analytics
-├── components/                 # Reusable components
-│   ├── common/                 # Shared components
-│   ├── role-based/             # Role-specific components
-│   └── [feature]/              # Feature-specific components
-└── hooks/                      # Custom hooks
-    ├── api/                    # API hooks
-    └── business/               # Business logic hooks
-```
-
-### **Permission Pattern:**
+### **API Integration Pattern:**
 
 ```typescript
-<PermissionGate requiredRoles={[UserRole.Doctor]} resourceOwnerId={cycleId}>
-  <CreateCycleButton />
-</PermissionGate>
+// Consistent hook pattern for all APIs:
+/src/hooks/api/
+├── useAuth.ts              // Authentication APIs
+├── useServices.ts          // Treatment services & packages
+├── useDoctors.ts           // Doctor management & availability
+├── useTreatmentCycles.ts   // Cycles & phases management
+├── useAppointments.ts      // Appointment booking & management
+├── useTestResults.ts       // Test results & medical data
+├── usePrescriptions.ts     // Prescription & medication management
+├── usePayments.ts          // Payment processing
+├── useAnalytics.ts         // Analytics & reporting
+└── useReviews.ts           // Review system
 ```
 
-### **Component Naming:**
+### **Component Architecture:**
 
 ```typescript
-CustomerServiceCard.tsx; // Customer-specific view
-DoctorServiceCard.tsx; // Doctor-specific view
-BaseServiceCard.tsx; // Shared component with permissions
+// Feature-based component organization:
+/src/components/
+├── common/                 // Shared components
+│   ├── DataTable.tsx
+│   ├── FilterPanel.tsx
+│   ├── LoadingStates.tsx
+│   └── ErrorBoundary.tsx
+├── auth/                   // Authentication components
+├── services/               // Service browser components
+├── cycles/                 // Treatment cycle components
+├── appointments/           // Appointment system components
+├── medical/                // Test results & medical components
+├── payments/               // Payment system components
+├── analytics/              // Analytics & dashboard components
+├── prescriptions/          // Prescription management
+└── reviews/                // Review system components
+```
+
+### **State Management Strategy:**
+
+```typescript
+// Zustand stores for complex state:
+/src/stores/
+├── auth.store.ts          // ✅ Already implemented
+├── services.store.ts      // Service selection state
+├── booking.store.ts       // Appointment booking flow
+├── cycles.store.ts        // Treatment cycle management
+└── notifications.store.ts // UI notifications
 ```
 
 ---
@@ -424,79 +474,80 @@ BaseServiceCard.tsx; // Shared component with permissions
 
 ### **Functional Goals:**
 
-- [ ] Service catalog fully functional with package comparison
-- [ ] Treatment cycle management for all roles
-- [ ] Complete appointment booking flow
-- [ ] Test results visualization with charts
-- [ ] VNPay payment integration working
-- [ ] Analytics dashboard for all roles
-- [ ] Review system functional
+- [ ] Complete patient journey from service selection to review
+- [ ] Doctor workflow from cycle creation to prescription
+- [ ] Manager dashboard with full analytics
+- [ ] Payment integration with VNPay working
+- [ ] All APIs from guide.md integrated
 
 ### **Technical Goals:**
 
 - [ ] Mobile responsive (all breakpoints)
 - [ ] TypeScript strict mode compliance
+- [ ] React Query caching optimized
+- [ ] Error boundaries and loading states
 - [ ] Performance score >85 on Lighthouse
-- [ ] Error boundaries implemented
-- [ ] Loading states for all async operations
 
-### **User Experience Goals:**
+### **Business Goals:**
 
-- [ ] Intuitive navigation for all roles
-- [ ] Consistent design system usage
-- [ ] Fast loading times (<2s)
-- [ ] Smooth animations and transitions
-- [ ] Clear error messages
+- [ ] End-to-end treatment flow functional
+- [ ] Role-based permissions working correctly
+- [ ] Payment processing operational
+- [ ] Analytics dashboard providing insights
+- [ ] User feedback system complete
 
 ---
 
-## 📋 **RISK MITIGATION**
+## 📋 **RISK MITIGATION (UPDATED)**
 
-### **Low-Risk Features (APIs ready):**
+### **Low-Risk Features (APIs 100% Ready):**
 
-- Service browser ✅
-- Treatment cycles ✅
-- Appointments ✅
-- Test results ✅
-- Payments ✅
+- All main flow APIs verified in guide.md ✅
+- No backend dependencies missing ✅
+- Clear API documentation available ✅
 
-### **Fallback Plans:**
+### **Medium-Risk Items:**
 
-- Mock prescription features if needed
-- Skip real-time notifications (use polling)
-- Basic notification system without SignalR
+- Real-time notifications → Use polling instead
+- Complex chart visualizations → Use simple charts first
+- PDF generation → Use browser print if needed
 
-### **Dependencies:**
+### **Contingency Plans:**
 
-- ✅ **Zero external dependencies** - all APIs ready
-- ✅ **No backend coordination needed** for Week 1 features
-- ✅ **Can start immediately**
+- If prescription APIs have issues → Focus on read-only medication display
+- If payment gateway fails → Implement payment tracking only
+- If analytics APIs incomplete → Use mock data for UI
 
 ---
 
-## 🚀 **GETTING STARTED**
+## 🚀 **GETTING STARTED - DAY 1 CHECKLIST**
 
-### **Day 1 Morning Checklist:**
-
-- [ ] Setup routing for services pages
-- [ ] Create ServicesBrowser page structure
-- [ ] Implement ServiceCard component
-- [ ] Connect to treatment-services API
-- [ ] Add basic filtering
-
-### **Quick Start Commands:**
+### **Environment Setup:**
 
 ```bash
-# Start development
-cd D:\idle\ITM\FE
-npm run dev
+# Verify API connectivity
+curl https://localhost:7178/api/treatment-services
+curl https://localhost:7178/api/treatment-packages
 
-# Create new feature branch
-git checkout -b feature/service-browser
+# Install additional dependencies if needed
+npm install recharts jspdf html2canvas
 
-# Start with services implementation
-mkdir src/pages/services
-mkdir src/components/services
+# Create Day 1 feature structure
+mkdir -p src/pages/services
+mkdir -p src/components/services
+mkdir -p src/hooks/api
 ```
 
-**This plan ensures 100% executable features with immediate business value and no dependencies on incomplete backend APIs.**
+### **Day 1 Development Start:**
+
+```typescript
+// 1. Create useServices hook
+// 2. Implement ServicesBrowser page
+// 3. Create ServiceCard components
+// 4. Add package comparison functionality
+// 5. Test with real APIs
+```
+
+---
+
+**This revised plan ensures 100% alignment with guide.md APIs and delivers a complete, functional treatment management system in 7 days.**
