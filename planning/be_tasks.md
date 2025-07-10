@@ -8,7 +8,7 @@ Hoàn thiện các API endpoints còn thiếu và tối ưu hóa business logic 
 
 ## **DAY 0 - Fix các phần**
 
-### **Issue #BE-FIX006: CRITICAL VALIDATION FIXES REQUIRED**
+### **Issue #BE-FIX006: CRITICAL VALIDATION FIXES REQUIRED** - ✅ COMPLETED
 
 #### **Task #1: Missing Entity Validation in TreatmentCycle Creation**
 
@@ -88,77 +88,9 @@ Hoàn thiện các API endpoints còn thiếu và tối ưu hóa business logic 
 
 ---
 
-### **Issue #BE-FIX007: MISSING FEATURES IMPLEMENTATION**
-
-#### **Task #1: Missing Medications Controller**
-
-**Status:** Business logic exists but no API endpoints
-
-**Problem Description:**
-
-- `IMedicationService` và `MedicationService` đã implemented
-- Không có `MedicationsController` để expose APIs
-- Frontend không thể interact với medication data
-
-**Required Actions:**
-
-- [ ] Create `MedicationsController.cs` với full CRUD operations
-- [ ] Implement GET `/api/medications` (with filtering)
-- [ ] Implement GET `/api/medications/{id}`
-- [ ] Implement POST `/api/medications` (Doctor/Admin only)
-- [ ] Implement PUT `/api/medications/{id}` (Doctor/Admin only)
-- [ ] Implement GET `/api/medications/search` functionality
-- [ ] Add proper authorization và error handling
-- [ ] Create required DTOs (CreateMedicationDto, UpdateMedicationDto, MedicationFilterDto)
-
----
-
-#### **Task #2: Missing Prescriptions Controller**
-
-**Status:** Business logic exists but no API endpoints
-
-**Problem Description:**
-
-- `IPrescriptionService` và `PrescriptionService` đã implemented
-- Không có `PrescriptionsController` để expose APIs
-- Treatment workflow bị incomplete without prescription management
-
-**Required Actions:**
-
-- [ ] Create `PrescriptionsController.cs` với full workflow support
-- [ ] Implement POST `/api/prescriptions/phase/{phaseId}` (Doctor only)
-- [ ] Implement GET `/api/prescriptions/phase/{phaseId}`
-- [ ] Implement GET `/api/prescriptions/{id}`
-- [ ] Implement GET `/api/prescriptions/customer/{customerId}/active`
-- [ ] Implement PUT `/api/prescriptions/{id}` (Doctor only)
-- [ ] Implement POST `/api/prescriptions/{id}/dose-taken` (Customer only)
-- [ ] Add proper role-based authorization
-- [ ] Create required DTOs (CreatePrescriptionDto, UpdatePrescriptionDto, RecordDoseDto)
-
----
-
-## 🗂️ **ADDITIONAL DTOs REQUIRED**
-
-### **For Medications:**
-
-- [ ] `CreateMedicationDto` - for creating new medications
-- [ ] `UpdateMedicationDto` - for updating medication info
-- [ ] `MedicationDetailDto` - for detailed medication response
-- [ ] `MedicationFilterDto` - for filtering medications list
-
-### **For Prescriptions:**
-
-- [ ] `CreatePrescriptionDto` - for doctor prescribing medications
-- [ ] `UpdatePrescriptionDto` - for modifying prescriptions
-- [ ] `PrescriptionDetailDto` - for detailed prescription info
-- [ ] `RecordDoseDto` - for patients recording dose intake
-- [ ] `PrescriptionSummaryDto` - for listing prescriptions
-
----
-
 ## 🔴 **DAY 1 - HIGH PRIORITY (Core Treatment APIs)**
 
-### **Issue #BE-022: Complete Treatment Phase Management APIs**
+### **Issue #BE-022: Complete Treatment Phase Management APIs** - ✅ COMPLETED
 
 **Priority:** 🔴 Critical
 **Estimated Time:** 4 hours
@@ -222,7 +154,7 @@ public interface ICycleService
 
 ---
 
-### **Issue #BE-023: Tạo Missing Controllers cho Prescription & Medication**
+### **Issue #BE-023: Tạo Missing Controllers cho Prescription & Medication** - ✅ COMPLETED
 
 **Priority:** 🔴 Critical  
 **Estimated Time:** 3 hours
@@ -314,7 +246,7 @@ public class PrescriptionSummaryDto
 
 ---
 
-### **Issue #BE-024: Enhance Cycle Initialization APIs**
+### **Issue #BE-024: Enhance Cycle Initialization APIs** - ✅ COMPLETED
 
 **Priority:** 🔴 Critical
 **Estimated Time:** 2 hours  
@@ -393,7 +325,7 @@ public class CycleTimelineDto
 
 ## 🟡 **DAY 2 - MEDIUM PRIORITY (Enhanced Features)**
 
-### **Issue #BE-025: Implement Real-time Notifications với SignalR**
+### **Issue #BE-025: Implement Real-time Notifications với SignalR** - ✅ COMPLETED
 
 **Priority:** 🟡 Medium
 **Estimated Time:** 5 hours
@@ -489,7 +421,7 @@ public async Task<IActionResult> GetRealTimeNotificationStatus(int userId)
 
 ---
 
-### **Issue #BE-026: Advanced Appointment Features**
+### **Issue #BE-026: Advanced Appointment Features** - PENDING
 
 **Priority:** 🟡 Medium
 **Estimated Time:** 4 hours
@@ -579,7 +511,7 @@ public class AutoScheduleDto
 
 ## 🟢 **DAY 3 - OPTIMIZATION & ENHANCEMENT**
 
-### **Issue #BE-027: Advanced Analytics & Reporting APIs**
+### **Issue #BE-027: Advanced Analytics & Reporting APIs** - PENDING
 
 **Priority:** 🟢 Low
 **Estimated Time:** 4 hours
@@ -656,7 +588,7 @@ public class EfficiencyMetrics
 
 ---
 
-### **Issue #BE-028: Implement Email Integration**
+### **Issue #BE-028: Implement Email Integration** - PENDING
 
 **Priority:** 🟢 Low
 **Estimated Time:** 3 hours
